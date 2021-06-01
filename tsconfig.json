@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "preserveConstEnums": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist/src",
+    "allowJs": true,
+    "checkJs": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "index.ts",
+    "src/**/*"
+  ]
+}

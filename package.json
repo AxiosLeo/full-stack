@@ -1,0 +1,35 @@
+{
+  "name": "node-utils",
+  "version": "0.0.1",
+  "description": "Some code snippets that are often used in Node.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --fix src/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AxiosCros/node-tools.git"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "pre-commit": "^1.2.2"
+  },
+  "author": "axiosleo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AxiosCros/node-tools/issues"
+  },
+  "homepage": "https://github.com/AxiosCros/node-tools#readme",
+  "pre-commit": {
+    "silent": false,
+    "run": [
+      "lint"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^15.6.1"
+  }
+}
