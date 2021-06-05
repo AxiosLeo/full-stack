@@ -1,7 +1,7 @@
 {
-  "name": "node-utils",
+  "name": "ts-study-project",
   "version": "0.0.1",
-  "description": "Some code snippets that are often used in Node.js",
+  "description": "Project for study Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
