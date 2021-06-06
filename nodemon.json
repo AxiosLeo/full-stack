@@ -4,7 +4,8 @@
     "**/__tests__/*"
   ],
   "watch": [
-    "src"
+    "src",
+    "index.ts"
   ],
   "exec": "node -r ts-node/register index.ts",
   "ext": "ts"

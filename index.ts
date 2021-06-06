@@ -7,7 +7,8 @@ import {
 import {
   Workflow,
   helper,
-  Context
+  Context,
+  printer
 } from '@axiosleo/cli-tool';
 
 import * as operator from './src/app';
@@ -15,7 +16,8 @@ import { config } from './src/config';
 
 const { _write } = helper.fs;
 
-export interface KoaContext extends Context, Koa.ParameterizedContext {
+export interface KoaContext extends Context {
+  app: Koa.ParameterizedContext
 }
 
 async function end(context: KoaContext) {
@@ -38,25 +40,29 @@ async function end(context: KoaContext) {
 export const start = (): void => {
   const koa = new Koa();
   const app_id = config.get('app_id', uuidv4());
-  koa.use(async (ctx: KoaContext) => {
+  koa.use(async (ctx: Koa.ParameterizedContext) => {
     const workflow = new Workflow<KoaContext>(operator);
-    console.log(`app_id : ${app_id}`);
-    Object.assign(ctx, {
+    const context = {
+      app: ctx,
+      curr: {},
       step_data: {},
       app_id,
       request_id: uuidv5(uuidv4(), app_id),
-    });
-    console.log(`workflows : ${workflow.workflows.join('->')}`);
-    workflow.start(ctx).then((context: KoaContext) => {
-      end(context);
-    }).catch((context: KoaContext) => {
-      console.error(context.curr.error);
-      end(context);
-    });
+    };
+    try {
+      const res: KoaContext = await workflow.start(context);
+      await end(res);
+    } catch (e) {
+      await end(e);
+    }
   });
   const port = config.get('port', 3000);
   koa.listen(port);
-  console.log('start');
+  printer.println()
+    .println(`start on http://localhost:${port}`)
+    .println();
+  printer.yellow(`app_id : ${app_id}`).println();
+  printer.yellow(`workflows : ${Object.keys(operator).join('->')}`).println();
 };
 
 start();
