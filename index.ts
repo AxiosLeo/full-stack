@@ -6,27 +6,17 @@ import {
 } from 'uuid';
 import {
   Workflow,
-  Configuration,
   helper,
   Context
 } from '@axiosleo/cli-tool';
+
 import * as operator from './src/app';
+import { config } from './src/config';
 
 const { _write } = helper.fs;
 
 export interface KoaContext extends Context, Koa.ParameterizedContext {
 }
-
-export const config = new Configuration({
-  debug: false,
-  port: 3000,
-  app_id: null,
-  path: {
-    root: process.cwd(),
-    cache: 'runtime',
-    config: 'config'
-  }
-});
 
 async function end(context: KoaContext) {
   const is_debug = config.get('debug', false);
@@ -52,7 +42,6 @@ export const start = (): void => {
     const workflow = new Workflow<KoaContext>(operator);
     console.log(`app_id : ${app_id}`);
     Object.assign(ctx, {
-      workflows: Object.keys(operator),
       step_data: {},
       app_id,
       request_id: uuidv5(uuidv4(), app_id),
