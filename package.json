@@ -19,7 +19,6 @@
     "koa": "^2.13.1",
     "moment": "^2.29.1",
     "os-locale": "^5.0.0",
-    "pre-commit": "^1.2.2",
     "uuid": "^8.3.2"
   },
   "author": "axiosleo",
@@ -28,12 +27,6 @@
     "url": "https://github.com/AxiosCros/node-tools/issues"
   },
   "homepage": "https://github.com/AxiosCros/node-tools#readme",
-  "pre-commit": {
-    "silent": false,
-    "run": [
-      "lint"
-    ]
-  },
   "devDependencies": {
     "@types/i18n": "^0.13.0",
     "@types/koa": "^2.13.3",
