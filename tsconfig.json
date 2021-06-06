@@ -11,7 +11,7 @@
     "strict": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist/src",
+    "outDir": "dist",
     "allowJs": true,
     "checkJs": true,
     "noUnusedLocals": true,

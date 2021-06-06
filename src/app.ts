@@ -1,15 +1,12 @@
 import { KoaContext } from '../index';
+// import * as routes from './routes';
 
 const middleware = async (context: KoaContext): Promise<void> => {
-  context.response.body = '1';
-  // console.log(context.response);
-  console.log(1);
+  console.log(context);
 };
 
 const validate = async (context: KoaContext): Promise<void> => {
-  context.response.body = context.response.body + '2';
-  // console.log(context.response);
-  console.log(2);
+  console.log(context);
 };
 
 const dispatch = async (context: KoaContext): Promise<void> => {
