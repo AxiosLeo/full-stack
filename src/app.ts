@@ -16,7 +16,7 @@ const controller = async (context: KoaContext): Promise<void> => {
 };
 
 const response = async (context: KoaContext): Promise<void> => {
-  context.app.body = '444';
+  context.app.body = '4';
   console.log('4');
 };
 

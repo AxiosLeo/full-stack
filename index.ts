@@ -58,11 +58,11 @@ export const start = (): void => {
   });
   const port = config.get('port', 3000);
   koa.listen(port);
-  printer.println()
-    .println(`start on http://localhost:${port}`)
+  printer.println().green('start on ')
+    .println(`http://localhost:${port}`)
     .println();
-  printer.yellow(`app_id : ${app_id}`).println();
-  printer.yellow(`workflows : ${Object.keys(operator).join('->')}`).println();
+  printer.yellow('app_id    : ').print(app_id).println();
+  printer.yellow('workflows : ').print(Object.keys(operator).join(' -> ') ).println().println();
 };
 
 start();
