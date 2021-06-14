@@ -8,13 +8,19 @@ import {
   Workflow,
   helper,
   Context,
-  printer
+  printer,
+  locales,
 } from '@axiosleo/cli-tool';
+import { HttpResponse } from './src/response';
 
 import * as operator from './src/app';
 import { config } from './src/config';
 
 const { _write } = helper.fs;
+locales.init({
+  dir: path.join(__dirname, './locales/'),
+  sets: ['en-US', 'zh-CN']
+});
 
 export interface KoaContext extends Context {
   app: Koa.ParameterizedContext
@@ -34,6 +40,11 @@ async function end(context: KoaContext) {
       ),
       JSON.stringify(context, null, 2)
     );
+  }
+  if (context.curr.error instanceof HttpResponse) {
+    context.app.type = 'json';
+    context.curr.error.result.request_id = context.request_id;
+    context.app.body = JSON.stringify(context.curr.error.result);
   }
 }
 
@@ -62,7 +73,7 @@ export const start = (): void => {
     .println(`http://localhost:${port}`)
     .println();
   printer.yellow('app_id    : ').print(app_id).println();
-  printer.yellow('workflows : ').print(Object.keys(operator).join(' -> ') ).println().println();
+  printer.yellow('workflows : ').print(Object.keys(operator).join(' -> ')).println().println();
 };
 
 start();
