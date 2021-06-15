@@ -1,5 +1,4 @@
 import { KoaContext } from '../index';
-import { send } from './response';
 
 const middleware = async (context: KoaContext): Promise<void> => {
   console.log('1');
@@ -15,11 +14,6 @@ const controller = async (context: KoaContext): Promise<void> => {
 
 const response = async (context: KoaContext): Promise<void> => {
   console.log('4');
-  send({
-    a: 'A',
-    b: 'B'
-  }, 'SV01001', 200);
-
 };
 
 export {
