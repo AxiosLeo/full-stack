@@ -17,6 +17,7 @@
   ],
   "ignorePatterns": [],
   "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
     "indent": [
       2,
       2

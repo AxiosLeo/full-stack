@@ -1,78 +1,41 @@
-import path from 'path';
 import Koa from 'koa';
-import {
-  v4 as uuidv4,
-  v5 as uuidv5
-} from 'uuid';
-import {
-  Workflow,
-  helper,
-  Context,
-  printer,
-  locales,
-} from '@axiosleo/cli-tool';
-import { HttpResponse } from './src/response';
-
+import { v4 as uuidv4 } from 'uuid';
+import { Workflow, printer, locales } from '@axiosleo/cli-tool';
+import { resolve } from './src/core/response';
+import { KoaContext } from './src/types';
 import * as operator from './src/app';
-import { config } from './src/config';
+import { config, paths } from './src/config';
 
-const { _write } = helper.fs;
 locales.init({
-  dir: path.join(__dirname, './locales/'),
+  dir: paths.locales,
   sets: ['en-US', 'zh-CN']
 });
 
-export interface KoaContext extends Context {
-  app: Koa.ParameterizedContext
-}
-
-async function end(context: KoaContext) {
-  const is_debug = config.get('debug', false);
-  if (is_debug) {
-    const root_path = config.get('path.root', process.cwd());
-    let cache_path = config.get('path.cache', 'runtime');
-    cache_path = path.join(root_path, cache_path);
-    await _write(
-      path.join(
-        __dirname,
-        cache_path,
-        `logs/${context.app_id}/${context.request_id}.json`
-      ),
-      JSON.stringify(context, null, 2)
-    );
-  }
-  if (context.curr.error instanceof HttpResponse) {
-    context.app.type = 'json';
-    context.curr.error.result.request_id = context.request_id;
-    context.app.body = JSON.stringify(context.curr.error.result);
-  }
+if (!config.app_id) {
+  config.app_id = uuidv4();
 }
 
 export const start = (): void => {
   const koa = new Koa();
-  const app_id = config.get('app_id', uuidv4());
   koa.use(async (ctx: Koa.ParameterizedContext) => {
     const workflow = new Workflow<KoaContext>(operator);
-    const context = {
+    const context: KoaContext = {
       app: ctx,
+      app_id: config.app_id,
       curr: {},
       step_data: {},
-      app_id,
-      request_id: uuidv5(uuidv4(), app_id),
     };
     try {
-      const res: KoaContext = await workflow.start(context);
-      await end(res);
+      await workflow.start(context);
     } catch (e) {
-      await end(e);
+      resolve(context, e.curr.error, 'json');
     }
   });
-  const port = config.get('port', 3000);
-  koa.listen(port);
+  koa.listen(config.port);
   printer.println().green('start on ')
-    .println(`http://localhost:${port}`)
+    .println(`http://localhost:${config.port}`)
     .println();
-  printer.yellow('app_id    : ').print(app_id).println();
+  printer.yellow('app_id    : ').print(config.app_id).println();
   printer.yellow('workflows : ').print(Object.keys(operator).join(' -> ')).println().println();
 };
 
