@@ -1,16 +1,15 @@
-import { KoaContext, StatusCode } from './types';
-import { config } from './config';
-
-import { HttpResponse } from './core/response';
+import { KoaContext } from './types';
 import * as modules from './modules';
+
 modules.loadModules();
+
+import * as events from './core/events';
 /**
  * Do global events
  * @param context 
  */
 const begin = async (context: KoaContext): Promise<void> => {
-  console.log(context.app_id);
-  console.log(config.events);
+  await events.trigger('app-begin', context);
 };
 
 /**
@@ -19,8 +18,7 @@ const begin = async (context: KoaContext): Promise<void> => {
  * @param context 
  */
 const middleware = async (context: KoaContext): Promise<void> => {
-  // console.log('1');
-  // console.log(context.app_id, config.app_id);
+  await events.trigger('app-middleware', context);
 };
 
 /**
@@ -28,19 +26,14 @@ const middleware = async (context: KoaContext): Promise<void> => {
  * @param context 
  */
 const validate = async (context: KoaContext): Promise<void> => {
-  // console.log('2');
-  // const req = context.app.req;
-  // console.log(parseUrlParts(req.url ? `http://${req.headers.host}${req.url}` : `http://${req.headers.host}/`), req.headers, req.method);
-};
+  await events.trigger('app-validate', context);};
 
 /**
  * exec controller for sigle API
  * @param context
  */
 const controller = async (context: KoaContext): Promise<void> => {
-  // const req = context.app.req;
-  // console.log(req);
-  throw new HttpResponse('111222', StatusCode.notFoundDataFile);
+  await events.trigger('app-controller', context);
 };
 
 export {
