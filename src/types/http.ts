@@ -18,6 +18,7 @@ export enum StatusCode {
 }
 
 export enum RESTfulHttpMethod {
+  All = 'Any',
   Create = 'POST',
   Read = 'GET',
   Update = 'PUT',

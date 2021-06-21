@@ -5,6 +5,7 @@ import { resolve } from './src/core/response';
 import { KoaContext } from './src/types';
 import * as operator from './src/app';
 import { config, paths } from './src/config';
+import { resolveMethod } from './src/utils/helper';
 
 locales.init({
   dir: paths.locales,
@@ -24,6 +25,8 @@ export const start = (): void => {
       app_id: config.app_id,
       curr: {},
       step_data: {},
+      method: resolveMethod(ctx.req.method),
+      url: ctx.req.url ? ctx.req.url : '/'
     };
     try {
       await workflow.start(context);
