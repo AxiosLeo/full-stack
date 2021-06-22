@@ -19,6 +19,9 @@ const begin = async (context: KoaContext): Promise<void> => {
  */
 const middleware = async (context: KoaContext): Promise<void> => {
   await events.trigger('app-middleware', context);
+
+  // exec middleware by routes configuration
+  // middlewares.dispatch(context.method, context.url);
 };
 
 /**
@@ -26,7 +29,8 @@ const middleware = async (context: KoaContext): Promise<void> => {
  * @param context 
  */
 const validate = async (context: KoaContext): Promise<void> => {
-  await events.trigger('app-validate', context);};
+  await events.trigger('app-validate', context);
+};
 
 /**
  * exec controller for sigle API
