@@ -7,7 +7,38 @@ export const config: AppConfiguration = {
   port: 3000,
   app_id: '',
   events: [],
-  routes: [],
+  routes: [
+    {
+      path: '/',
+      method: 'get|post',
+      handler: 'index/index/index',
+      intro: '',
+    },
+    {
+      path: '/test/{:id}/{:title}/foo/{:bar}', // with params
+      method: 'all',                             // match all request method
+      handler: 'index/index/index',
+      intro: 'has param',
+    },
+    {
+      path: '/has/**/text/{:name}',           // ** : ingore string before next '/'
+      method: 'post',
+      handler: 'index/index/index',
+      intro: 'ignore part of path',
+    },
+    {
+      path: '/admin/***', // *** : ignore string
+      method: 'all',
+      handler: 'index/index/illegal',
+      intro: 'default route rule',
+    },
+    {
+      path: '/***', // *** : ignore string
+      method: 'all',
+      handler: 'index/index/notFound',
+      intro: 'the default route rule when none of the above rules are matched',
+    }
+  ],
   middleware: [],
   validator: [],
 };

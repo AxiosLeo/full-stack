@@ -1,5 +1,9 @@
+/**
+ * route require elements : <module-name>/<controller-name>/<action-name>
+ */
 import { KoaContext } from './types';
 import * as modules from './modules';
+import { getRouteInfo } from './core/routes';
 
 modules.loadModules();
 
@@ -22,6 +26,7 @@ const middleware = async (context: KoaContext): Promise<void> => {
 
   // exec middleware by routes configuration
   // middlewares.dispatch(context.method, context.url);
+  console.log(getRouteInfo(context.url, context.app.req.method));
 };
 
 /**

@@ -19,3 +19,10 @@ export interface AppConfiguration {
   middleware: Array<any>,
   validator: Array<any>,
 }
+
+export interface RouteItem {
+  path: string,
+  method: string,
+  handler: string,
+  intro?: string
+}

@@ -1,6 +1,9 @@
 import { HttpResponse } from './response';
 import { StatusCode, HttpStatusCode } from '../types';
 
+/**
+ * Base Controller class
+ */
 export class Controller {
   format = 'json';
   response(data: unknown, code = StatusCode.success, status: HttpStatusCode = 200, headers = {}): never {
