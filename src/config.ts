@@ -4,7 +4,7 @@ import { AppConfiguration } from './types';
 
 export const config: AppConfiguration = {
   debug: false,
-  port: 3000,
+  port: 3300,
   app_id: '',
   events: [],
   routes: [
