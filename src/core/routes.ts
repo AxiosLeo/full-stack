@@ -2,11 +2,11 @@ import {
   RESTfulHttpMethod,
   RouteItem,
 } from '../types';
-import { Configuration } from '@axiosleo/cli-tool';
 import { Middleware } from './middleware';
 import { Validator } from './validation';
 import { Controller } from './controller';
 import { config } from '../config';
+import { debug } from '@axiosleo/cli-tool';
 
 /**
  * Router by RESTfulHttpMethod and pattern configuration
@@ -32,7 +32,7 @@ export class Router {
   }
 }
 
-export const routes: Configuration = new Configuration({}, '$');
+export const routes: any = {};
 
 const resolvePathinfo = (pathinfo: string): string[] => {
   let trace = [];
@@ -48,40 +48,44 @@ const resolvePathinfo = (pathinfo: string): string[] => {
 };
 
 export const getRouteInfo = (pathinfo: string, method?: string): Router | void => {
-  // const trace = resolvePathinfo(pathinfo);
-  // const step = 0;
-  // const total = trace.length;
-  // const defaul = null;
-  // const params: Record<string, unknown> = {};
-  // let curr;
-  // while (true) {
-  //   curr = trace[step] ?? null;
-  //   ++step;
-  // }
+  const trace = resolvePathinfo(pathinfo);
+  let curr = routes;
+  trace.forEach((t: string, index: number) => {
+    // has key
+    if (curr[t]) {
+      curr = curr[t];
+    }
+  });
   return;
 };
 
-// /a/{:aValue}/b/{:bValue}
-// /a/*/b/*
 // resolve routes
+// @example /a/{:aValue}/b/{:bValue}
+// @example /a/**/b/**
+// @example /a/***
 if (config.routes && config.routes.length > 0) {
   config.routes.forEach((route: RouteItem): void => {
-    // const handler: string = route.handler;
-    // const method = route.method;
     const pathinfo = route.path;
     const trace: string[] = resolvePathinfo(pathinfo);
     const params: string[] = [];
-    const key = trace.map((t: string): string => {
+    let curr: any = routes;
+    trace.forEach((t: string): void => {
       if (!t) {
-        params.push('');
-        return '*';
+        throw new Error('Invalid route path configuration : ' + pathinfo);
       }
+      let key: string;
       if (t.indexOf('{:') === 0) {
+        key = '*';
         params.push(t.substr(2, t.length - 3));
-        return '*';
+      } else {
+        key = t;
       }
-      return t;
-    }).join('$');
-    console.log(key);
+      if (!curr[key]) {
+        curr[key] = {};
+      }
+      curr = curr[key];
+    });
+    curr['__route___'] = { ...route, params };
   });
+  debug.dump(JSON.stringify(routes, null, 2));
 }
