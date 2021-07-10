@@ -6,7 +6,6 @@ import { Middleware } from './middleware';
 import { Validator } from './validation';
 import { Controller } from './controller';
 import { config } from '../config';
-import { debug } from '@axiosleo/cli-tool';
 
 /**
  * Router by RESTfulHttpMethod and pattern configuration
@@ -32,7 +31,7 @@ export class Router {
   }
 }
 
-export const routes: any = {};
+export let routes: any = {};
 
 const resolvePathinfo = (pathinfo: string): string[] => {
   let trace = [];
@@ -59,16 +58,13 @@ export const getRouteInfo = (pathinfo: string, method?: string): Router | void =
   return;
 };
 
-// resolve routes
-// @example /a/{:aValue}/b/{:bValue}
-// @example /a/**/b/**
-// @example /a/***
-if (config.routes && config.routes.length > 0) {
-  config.routes.forEach((route: RouteItem): void => {
+export const resolveRoutesConfig = (routes: RouteItem[]) => {
+  const result: any = {};
+  routes.forEach((route: RouteItem): void => {
     const pathinfo = route.path;
     const trace: string[] = resolvePathinfo(pathinfo);
     const params: string[] = [];
-    let curr: any = routes;
+    let curr: any = result;
     trace.forEach((t: string): void => {
       if (!t) {
         throw new Error('Invalid route path configuration : ' + pathinfo);
@@ -87,5 +83,13 @@ if (config.routes && config.routes.length > 0) {
     });
     curr['__route___'] = { ...route, params };
   });
-  debug.dump(JSON.stringify(routes, null, 2));
+  return result;
+}
+
+// resolve routes
+// @example /a/{:aValue}/b/{:bValue}
+// @example /a/**/b/**
+// @example /a/***
+if (config.routes && config.routes.length > 0 && !routes) {
+  routes = resolveRoutesConfig(config.routes);
 }
