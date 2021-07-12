@@ -1,5 +1,7 @@
 export { helper } from '@axiosleo/cli-tool';
-import { locales } from '@axiosleo/cli-tool';
+import { locales, debug as _debug } from '@axiosleo/cli-tool';
+
+export const debug = _debug;
 
 import {
   RESTfulHttpMethod
@@ -14,10 +16,10 @@ export const resolveMethod = (method?: string): RESTfulHttpMethod => {
     return RESTfulHttpMethod.Read;
   }
   switch (method) {
-  case 'POST': return RESTfulHttpMethod.Create;
-  case 'PUT': return RESTfulHttpMethod.Update;
-  case 'PATCH':return RESTfulHttpMethod.Update;
-  case 'DELETE': return RESTfulHttpMethod.Delete;
-  default: return RESTfulHttpMethod.Read;
+    case 'POST': return RESTfulHttpMethod.Create;
+    case 'PUT': return RESTfulHttpMethod.Update;
+    case 'PATCH': return RESTfulHttpMethod.Update;
+    case 'DELETE': return RESTfulHttpMethod.Delete;
+    default: return RESTfulHttpMethod.Read;
   }
 };
