@@ -9,8 +9,10 @@ import {
 import { expect } from 'chai';
 
 describe('Routes test cases', () => {
-  it('resolve Routes Configuration', async () => {
-    const routesConfig: RouteItem[] = [
+  let routesConfig: RouteItem[] = [];
+  let routesResult: any;
+  before(() => {
+    routesConfig = [
       {
         path: '/',
         method: 'get|post',
@@ -42,8 +44,20 @@ describe('Routes test cases', () => {
         intro: 'the default route rule when none of the above rules are matched',
       }
     ];
-    const result = routes.resolveRoutesConfig(routesConfig);
+  });
+
+  it('shoud be ok to resolve Routes Configuration', async () => {
+    routesResult = routes.resolveRoutesConfig(routesConfig);
     const expected = await fs._read(path.join(__dirname, './assets/routes.resolve.result.json'));
-    expect(expected).to.be.equal(JSON.stringify(result));
+    expect(expected).to.be.equal(JSON.stringify(routesResult));
+  });
+
+  it('should be ok to get Route Info', async () => {
+    routes.resolveRoutesConfig(routesConfig);
+    const route = routes.getRouteInfo('/test/1/a/foo/bar', 'GET');
+    expect(route).to.be.exist;
+    expect(route?.method).to.be.equal('GET');
+    expect(route?.pattern).to.be.equal('/test/{:id}/{:title}/foo/{:bar}');
+    expect(JSON.stringify(route?.params)).to.be.equal(JSON.stringify({ id: '1', title: 'a', bar: 'bar'}));
   });
 });
