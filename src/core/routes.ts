@@ -1,37 +1,10 @@
 import {
-  RESTfulHttpMethod,
+  RouteInfo,
   RouteItem,
+  RESTfulHttpMethod,
 } from '../types';
-import { Middleware } from './middleware';
-import { Validator } from './validation';
-import { Controller } from './controller';
 import { config } from '../config';
-
-/**
- * Router by RESTfulHttpMethod and pattern configuration
- */
-export class Router {
-  method: RESTfulHttpMethod;
-  pattern: string;
-  middlewares: Middleware[] = [];
-  validators: Validator[] = [];
-  controllers: Controller[] = [];
-  constructor(method: RESTfulHttpMethod, pattern: string) {
-    this.method = method;
-    this.pattern = pattern;
-  }
-  registerMiddlewares(...middlewares: Middleware[]): void {
-    this.middlewares = middlewares;
-  }
-  registerValidation(...validators: Validator[]): void {
-    this.validators = validators;
-  }
-  registerControllers(...controllers: Controller[]): void {
-    this.controllers = controllers;
-  }
-}
-
-export let routes: any = {};
+// import { debug } from '../utils/helper';
 
 const resolvePathinfo = (pathinfo: string): string[] => {
   let trace = [];
@@ -46,21 +19,59 @@ const resolvePathinfo = (pathinfo: string): string[] => {
   return trace;
 };
 
-export const getRouteInfo = (pathinfo: string, method?: string): Router | void => {
+export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null => {
   const trace = resolvePathinfo(pathinfo);
   let curr = routes;
-  trace.forEach((t: string, index: number) => {
-    // has key
-    if (curr[t]) {
-      curr = curr[t];
+  let step = 0;
+  let params: string[] = [];
+  while (step < trace.length) {
+    const tag = trace[step];
+    step++;
+    if (tag === '@') {
+      curr = curr[tag];
+      continue;
     }
-  });
-  return;
+    if (curr[tag]) {
+      // has key
+      curr = curr[tag];
+    } else if (curr['*']) {
+      params.push(tag);
+      curr = curr['*'];
+    } else if (curr['**']) {
+      curr = curr['**'];
+    } else if (curr['***']) {
+      curr = curr['***'];
+    } else {
+      break;
+    }
+  }
+  if (curr && curr['__route___']) {
+    curr = curr['__route___'];
+    const methods = curr['method'].split('|');
+    if (methods.indexOf('all') > -1 || methods.indexOf(method) > -1) {
+      const routeInfo: RouteInfo = {
+        method: method as RESTfulHttpMethod,
+        pattern: curr.path,
+        params: {},
+        intro: curr.intro,
+        controller: undefined,
+        middlewares: [],
+        validators: []
+      };
+      curr.params.forEach((item: string, index: number) => {
+        if (typeof params[index] !== 'undefined') {
+          routeInfo.params[item] = params[index];
+        }
+      });
+      return routeInfo;
+    }
+  }
+  return null;
 };
 
-export const resolveRoutesConfig = (routes: RouteItem[]) => {
+export const resolveRoutesConfig = (routesItems: RouteItem[]) => {
   const result: any = {};
-  routes.forEach((route: RouteItem): void => {
+  routesItems.forEach((route: RouteItem): void => {
     const pathinfo = route.path;
     const trace: string[] = resolvePathinfo(pathinfo);
     const params: string[] = [];
@@ -90,6 +101,4 @@ export const resolveRoutesConfig = (routes: RouteItem[]) => {
 // @example /a/{:aValue}/b/{:bValue}
 // @example /a/**/b/**
 // @example /a/***
-if (config.routes && config.routes.length > 0 && !routes) {
-  routes = resolveRoutesConfig(config.routes);
-}
+export let routes: any = resolveRoutesConfig(config.routes);
