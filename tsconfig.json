@@ -19,9 +19,7 @@
   },
   "include": [
     "index.ts",
-    "src/**/*"
-  ],
-  "exclude": [
+    "src/**/*",
     "tests/**/*"
   ]
 }
