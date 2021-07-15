@@ -4,7 +4,6 @@ import {
   RESTfulHttpMethod,
 } from '../types';
 import { config } from '../config';
-// import { debug } from '../utils/helper';
 
 const resolvePathinfo = (pathinfo: string): string[] => {
   let trace = [];
@@ -19,11 +18,45 @@ const resolvePathinfo = (pathinfo: string): string[] => {
   return trace;
 };
 
+export const resolveRoutesConfig = (routesItems: RouteItem[]): any => {
+  const result: any = {};
+  routesItems.forEach((route: RouteItem): void => {
+    const pathinfo = route.path;
+    const trace: string[] = resolvePathinfo(pathinfo);
+    const params: string[] = [];
+    let curr: any = result;
+    trace.forEach((t: string): void => {
+      if (!t) {
+        throw new Error('Invalid route path configuration : ' + pathinfo);
+      }
+      let key: string;
+      if (t.indexOf('{:') === 0) {
+        key = '*';
+        params.push(t.substr(2, t.length - 3));
+      } else {
+        key = t;
+      }
+      if (!curr[key]) {
+        curr[key] = {};
+      }
+      curr = curr[key];
+    });
+    curr['__route___'] = { ...route, params };
+  });
+  return result;
+};
+
+// resolve routes
+// @example /a/{:aValue}/b/{:bValue}
+// @example /a/**/b/**
+// @example /a/***
+export const routes: any = resolveRoutesConfig(config.routes);
+
 export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null => {
   const trace = resolvePathinfo(pathinfo);
   let curr = routes;
   let step = 0;
-  let params: string[] = [];
+  const params: string[] = [];
   while (step < trace.length) {
     const tag = trace[step];
     step++;
@@ -54,7 +87,6 @@ export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null
         pattern: curr.path,
         params: {},
         intro: curr.intro,
-        controller: undefined,
         middlewares: [],
         validators: []
       };
@@ -69,36 +101,3 @@ export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null
   return null;
 };
 
-export const resolveRoutesConfig = (routesItems: RouteItem[]) => {
-  const result: any = {};
-  routesItems.forEach((route: RouteItem): void => {
-    const pathinfo = route.path;
-    const trace: string[] = resolvePathinfo(pathinfo);
-    const params: string[] = [];
-    let curr: any = result;
-    trace.forEach((t: string): void => {
-      if (!t) {
-        throw new Error('Invalid route path configuration : ' + pathinfo);
-      }
-      let key: string;
-      if (t.indexOf('{:') === 0) {
-        key = '*';
-        params.push(t.substr(2, t.length - 3));
-      } else {
-        key = t;
-      }
-      if (!curr[key]) {
-        curr[key] = {};
-      }
-      curr = curr[key];
-    });
-    curr['__route___'] = { ...route, params };
-  });
-  return result;
-}
-
-// resolve routes
-// @example /a/{:aValue}/b/{:bValue}
-// @example /a/**/b/**
-// @example /a/***
-export let routes: any = resolveRoutesConfig(config.routes);
