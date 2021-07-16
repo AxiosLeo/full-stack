@@ -5,7 +5,7 @@ const fs = helper.fs;
 
 import {
   RouteItem,
-} from '../src/types'
+} from '../src/types';
 import { expect } from 'chai';
 
 describe('Routes test cases', () => {

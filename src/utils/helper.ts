@@ -16,10 +16,10 @@ export const resolveMethod = (method?: string): RESTfulHttpMethod => {
     return RESTfulHttpMethod.Read;
   }
   switch (method) {
-    case 'POST': return RESTfulHttpMethod.Create;
-    case 'PUT': return RESTfulHttpMethod.Update;
-    case 'PATCH': return RESTfulHttpMethod.Update;
-    case 'DELETE': return RESTfulHttpMethod.Delete;
-    default: return RESTfulHttpMethod.Read;
+  case 'POST': return RESTfulHttpMethod.Create;
+  case 'PUT': return RESTfulHttpMethod.Update;
+  case 'PATCH': return RESTfulHttpMethod.Update;
+  case 'DELETE': return RESTfulHttpMethod.Delete;
+  default: return RESTfulHttpMethod.Read;
   }
 };
