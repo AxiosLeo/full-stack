@@ -87,8 +87,7 @@ export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null
         pattern: curr.path,
         params: {},
         intro: curr.intro,
-        middlewares: [],
-        validators: []
+        handler: curr.handler
       };
       curr.params.forEach((item: string, index: number) => {
         if (typeof params[index] !== 'undefined') {
