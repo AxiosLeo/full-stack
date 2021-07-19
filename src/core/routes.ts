@@ -75,13 +75,14 @@ export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null
     } else if (curr['***']) {
       curr = curr['***'];
     } else {
+      curr = null;
       break;
     }
   }
   if (curr && curr['__route___']) {
     curr = curr['__route___'];
-    const methods = curr['method'].split('|');
-    if (methods.indexOf('all') > -1 || methods.indexOf(method) > -1) {
+    const methods = curr['method'].toUpperCase().split('|');
+    if (methods.indexOf('ALL') > -1 || methods.indexOf(method) > -1) {
       const routeInfo: RouteInfo = {
         method: method as RESTfulHttpMethod,
         pattern: curr.path,

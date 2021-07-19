@@ -54,10 +54,13 @@ describe('Routes test cases', () => {
 
   it('should be ok to get Route Info', async () => {
     routes.resolveRoutesConfig(routesConfig);
-    const route = routes.getRouteInfo('/test/1/a/foo/bar', 'GET');
+    let route = routes.getRouteInfo('/test/1/a/foo/bar', 'GET');
     expect(route).to.be.exist;
     expect(route?.method).to.be.equal('GET');
     expect(route?.pattern).to.be.equal('/test/{:id}/{:title}/foo/{:bar}');
-    expect(JSON.stringify(route?.params)).to.be.equal(JSON.stringify({ id: '1', title: 'a', bar: 'bar'}));
+    expect(JSON.stringify(route?.params)).to.be.equal(JSON.stringify({ id: '1', title: 'a', bar: 'bar' }));
+    
+    route = routes.getRouteInfo('/has/not/exist', 'POST');
+    expect(route).to.be.null;
   });
 });
