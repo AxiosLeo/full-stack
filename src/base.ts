@@ -1,5 +1,5 @@
-import { HttpResponse } from './response';
-import { StatusCode, HttpStatusCode } from '../types';
+import { HttpResponse } from './core/response';
+import { StatusCode, HttpStatusCode } from './types';
 
 /**
  * Base Controller class
@@ -9,4 +9,12 @@ export class Controller {
   response(data: unknown, code = StatusCode.success, status: HttpStatusCode = 200, headers = {}): never {
     throw new HttpResponse(data, code, status, headers);
   }
+}
+
+export class Middleware {
+
+}
+
+export class Validator {
+
 }
