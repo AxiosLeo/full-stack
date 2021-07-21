@@ -31,7 +31,7 @@ export const start = (): void => {
     try {
       await workflow.start(context);
     } catch (e) {
-      resolve(context, e.curr.error, 'json');
+      resolve(context, e.curr.error);
     }
   });
   koa.listen(config.port);

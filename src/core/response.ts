@@ -1,4 +1,5 @@
 import {
+  HttpResponseFormat,
   StatusCode,
   KoaContext,
   HttpStatusCode,
@@ -16,18 +17,19 @@ export class HttpResponse extends Error {
   status: number
   result: Record<string, unknown>
   headers: Record<string, string>
+  format: HttpResponseFormat = 'json'
   constructor(data: unknown, code: StatusCode, status: HttpStatusCode = 200, headers = {}) {
     super();
     this.headers = headers;
     this.status = status;
     const [c, m] = code.split(';');
     this.result = {
-      code: `app-${c}`,
+      code: `${c}`,
       msg: `${m ? m : ''}`,
-      data,
+      // eslint-disable-next-line no-undefined
+      data: data ? data : undefined,
       request_id: uuidv5(uuidv4(), config.app_id),
     };
-    console.log(this.result);
   }
 }
 
@@ -49,8 +51,8 @@ export class ServerError extends HttpError {
   }
 }
 
-export const resolve = (context: KoaContext, response: HttpResponse, format = 'json'): void => {
-  context.app.type = format;
-  response.result.request_id = context.request_id;
+export const resolve = (context: KoaContext, response: HttpResponse): void => {
+  context.app.type = response.format;
   context.app.body = JSON.stringify(response.result);
+  context.app.response.status = response.status;
 };
