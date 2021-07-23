@@ -11,7 +11,7 @@ export type HttpResponseFormat = 'json' | 'xml' | 'raw' | 'jsonp';
  */
 export enum StatusCode {
   // common code
-  unknownError = '000;Unknown Error',
+  unknown = '000;Unknown Error',
   success = '200;Success',
   notFound = '404;Not Found',
 

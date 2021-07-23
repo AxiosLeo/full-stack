@@ -10,13 +10,13 @@ export interface RouteInfo {
     [key: string]: string;
   };
   intro: string;
-  handler: string;
+  handler: any;
 }
 
 export interface RouteItem {
   path: string,
   method: string,
-  handler: string,
+  handler: any,
   intro?: string
 }
 

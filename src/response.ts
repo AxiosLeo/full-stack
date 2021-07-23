@@ -46,7 +46,7 @@ export class BadDataException extends HttpError {
 }
 
 export class ServerError extends HttpError {
-  constructor(code: StatusCode = StatusCode.unknownError, headers = {}) {
+  constructor(code: StatusCode = StatusCode.unknown, headers = {}) {
     super(code, 500, headers);
   }
 }

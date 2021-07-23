@@ -5,6 +5,7 @@ import { StatusCode, KoaContext, RESTfulHttpMethod } from './types';
 import * as modules from './modules';
 import { getRouteInfo } from './base';
 import { HttpError } from './response';
+import { debug } from '@axiosleo/cli-tool';
 
 modules.loadModules();
 
@@ -17,10 +18,10 @@ import * as events from './events';
 const begin = async (context: KoaContext): Promise<void> => {
   await events.trigger('app-begin', context);
   const router = getRouteInfo(context.url, context.app.req.method as RESTfulHttpMethod);
-  console.log(router);
   if (router) {
     context.router = router;
   } else {
+    debug.dump(router);
     throw new HttpError(StatusCode.notFound, 404);
   }
 };
@@ -50,6 +51,8 @@ const validate = async (context: KoaContext): Promise<void> => {
  */
 const controller = async (context: KoaContext): Promise<void> => {
   await events.trigger('app-controller', context);
+  const handler = context.router?.handler;
+  await handler(context);
 };
 
 const end = async (): Promise<void> => {

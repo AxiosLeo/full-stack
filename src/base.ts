@@ -56,8 +56,8 @@ export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null
   let curr = config.routes;
   let step = 0;
   const params: string[] = [];
-  while (step < trace.length) {
-    const tag = trace[step];
+  while (step < trace.length + 1) {
+    const tag = trace[step] ? trace[step] : '$';
     step++;
     if (tag === '@') {
       curr = curr[tag];
@@ -79,7 +79,7 @@ export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null
     }
   }
   if (curr && curr['__route___']) {
-    curr = curr['__route___'];
+    curr = curr['__route___'] as RouteItem;
     const methods = curr['method'].toUpperCase().split('|');
     if (methods.indexOf('ANY') > -1 || methods.indexOf(method) > -1) {
       const routeInfo: RouteInfo = {
