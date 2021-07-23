@@ -1,4 +1,4 @@
-import { Controller } from '../../core/controller';
+import { Controller } from '../../base';
 
 /**
  * TestController

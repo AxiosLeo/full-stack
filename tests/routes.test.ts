@@ -21,7 +21,7 @@ describe('Routes test cases', () => {
       },
       {
         path: '/test/{:id}/{:title}/foo/{:bar}', // with params
-        method: 'all',                             // match all request method
+        method: 'any',                             // match all request method
         handler: 'index/index/index',
         intro: 'has param',
       },
@@ -33,13 +33,13 @@ describe('Routes test cases', () => {
       },
       {
         path: '/admin/***', // *** : ignore string
-        method: 'all',
+        method: 'any',
         handler: 'index/index/illegal',
         intro: 'default route rule',
       },
       {
         path: '/***', // *** : ignore string
-        method: 'all',
+        method: 'any',
         handler: 'index/index/notFound',
         intro: 'the default route rule when none of the above rules are matched',
       }
@@ -59,7 +59,7 @@ describe('Routes test cases', () => {
     expect(route?.method).to.be.equal('GET');
     expect(route?.pattern).to.be.equal('/test/{:id}/{:title}/foo/{:bar}');
     expect(JSON.stringify(route?.params)).to.be.equal(JSON.stringify({ id: '1', title: 'a', bar: 'bar' }));
-    
+
     route = routes.getRouteInfo('/has/not/exist', 'POST');
     expect(route).to.be.null;
   });
