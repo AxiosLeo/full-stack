@@ -4,7 +4,7 @@
 import { StatusCode, KoaContext, RESTfulHttpMethod } from './types';
 import * as modules from './modules';
 import { getRouteInfo } from './core/routes';
-import { HttpError } from './core/response';
+import { HttpError } from './response';
 
 modules.loadModules();
 

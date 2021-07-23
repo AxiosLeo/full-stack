@@ -4,14 +4,14 @@ import {
   KoaContext,
   HttpStatusCode,
   HttpErrorStatusCode
-} from '../types';
+} from './types';
 
 import {
   v4 as uuidv4,
   v5 as uuidv5
 } from 'uuid';
 
-import { config } from '../config';
+import { config } from './config';
 
 export class HttpResponse extends Error {
   status: number

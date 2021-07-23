@@ -1,4 +1,4 @@
-import { HttpResponse } from './core/response';
+import { HttpResponse } from './response';
 import { StatusCode, HttpStatusCode } from './types';
 
 /**

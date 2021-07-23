@@ -1,7 +1,7 @@
 import Koa from 'koa';
 import { v4 as uuidv4 } from 'uuid';
 import { Workflow, printer, locales } from '@axiosleo/cli-tool';
-import { resolve } from './src/core/response';
+import { resolve } from './src/response';
 import { KoaContext } from './src/types';
 import * as operator from './src/app';
 import { config, paths } from './src/config';
