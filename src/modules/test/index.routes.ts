@@ -9,4 +9,3 @@ addRoute({
   method: 'any',
   handler: index
 });
-
