@@ -1,9 +1,9 @@
 import {
   KoaContext,
-} from '../types';
+} from './types';
 import {
   helper
-} from '../utils/helper';
+} from './utils/helper';
 
 export const events: Record<string, any> = {};
 

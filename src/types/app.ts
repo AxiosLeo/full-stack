@@ -3,7 +3,6 @@ import Koa from 'koa';
 import { Context } from '@axiosleo/cli-tool';
 import { RESTfulHttpMethod } from './http';
 
-
 export interface RouteInfo {
   method: RESTfulHttpMethod;
   pattern: string;
@@ -12,6 +11,13 @@ export interface RouteInfo {
   };
   intro: string;
   handler: string;
+}
+
+export interface RouteItem {
+  path: string,
+  method: string,
+  handler: string,
+  intro?: string
 }
 
 export interface KoaContext extends Context {
@@ -27,14 +33,7 @@ export interface AppConfiguration {
   port: number,
   app_id: string,
   events: Array<any>,
-  routes: Array<any>,
   middleware: Array<any>,
   validator: Array<any>,
-}
-
-export interface RouteItem {
-  path: string,
-  method: string,
-  handler: string,
-  intro?: string
+  routes: any,
 }

@@ -3,12 +3,13 @@
  */
 import { StatusCode, KoaContext, RESTfulHttpMethod } from './types';
 import * as modules from './modules';
-import { getRouteInfo } from './core/routes';
+import { getRouteInfo } from './base';
 import { HttpError } from './response';
 
 modules.loadModules();
 
-import * as events from './core/events';
+import * as events from './events';
+
 /**
  * Do global events
  * @param context 
