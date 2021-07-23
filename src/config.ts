@@ -16,7 +16,7 @@ export const config: AppConfiguration = {
     },
     {
       path: '/test/{:id}/{:title}/foo/{:bar}', // with params
-      method: 'all',                             // match all request method
+      method: 'any',                             // match all request method
       handler: 'index/index/index',
       intro: 'has param',
     },
@@ -28,13 +28,13 @@ export const config: AppConfiguration = {
     },
     {
       path: '/admin/***', // *** : ignore string
-      method: 'all',
+      method: 'any',
       handler: 'index/index/illegal',
       intro: 'default route rule',
     },
     {
       path: '/***', // *** : ignore string
-      method: 'all',
+      method: 'any',
       handler: 'index/index/notFound',
       intro: 'the default route rule when none of the above rules are matched',
     }
