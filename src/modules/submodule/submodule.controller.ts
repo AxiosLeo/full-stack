@@ -1,4 +1,4 @@
-import { Controller } from '../../base';
+import { Controller } from '@axiosleo/koan';
 
 /**
  * TestController

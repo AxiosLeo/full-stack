@@ -1,4 +1,4 @@
-import { config } from '../../config';
+import { config } from '@axiosleo/koan';
 
 config.events.push({ a: 'A', b: 'B', c: 'C', d: 'D' });
 /**

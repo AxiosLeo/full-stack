@@ -2,7 +2,7 @@ import {
   index
 } from './index.controller';
 
-import { addRoute } from '../../base';
+import { addRoute } from '@axiosleo/koan';
 
 addRoute({
   path: '/***',

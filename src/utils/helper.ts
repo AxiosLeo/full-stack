@@ -5,7 +5,7 @@ export const debug = _debug;
 
 import {
   RESTfulHttpMethod
-} from '../types';
+} from '@axiosleo/koan';
 
 export const trans = (msg: string, params?: Record<string, string>): string => {
   return locales.__(msg, params);

@@ -1,5 +1,5 @@
-import { KoaContext, StatusCode } from '../../types';
-import { HttpResponse } from '../../response';
+import { KoaContext, StatusCode } from '@axiosleo/koan';
+import { HttpResponse } from '@axiosleo/koan';
 
 export const index = async (context: KoaContext): Promise<void> => {
   throw new HttpResponse({
