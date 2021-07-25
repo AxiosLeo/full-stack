@@ -1,4 +1,4 @@
-import { start, config, paths } from '@axiosleo/koan';
+import { start, config, paths } from './src/framework';
 import * as path from 'path';
 
 Object.assign(config, {

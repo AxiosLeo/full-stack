@@ -21,8 +21,7 @@
     "koa-router": "^10.0.0",
     "parse-url-parts": "^2.0.3",
     "sequelize": "^6.6.2",
-    "uuid": "^8.3.2",
-    "@axiosleo/koan": "../koaf"
+    "uuid": "^8.3.2"
   },
   "author": "axiosleo",
   "license": "MIT",
