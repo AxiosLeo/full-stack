@@ -3,6 +3,7 @@ import { HttpResponse } from '@axiosleo/koan';
 
 export const index = async (context: KoaContext): Promise<void> => {
   throw new HttpResponse({
-    app_id: context.app_id
+    app_id: context.app_id,
+    test: 'test content'
   }, StatusCode.unknown);
 };
