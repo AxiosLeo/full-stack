@@ -9,3 +9,9 @@ addRoute({
   method: 'any',
   handler: index
 });
+
+addRoute({
+  path: '/',
+  method: 'any',
+  handler: index
+});
