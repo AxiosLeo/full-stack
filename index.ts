@@ -6,7 +6,7 @@ Object.assign(config, {
   port: 3333,
 });
 
-const root = path.join(__dirname, '../../');
+const root = __dirname;
 Object.assign(paths, {
   root: root,
   cache: path.join(root, 'runtime/'),
@@ -14,7 +14,6 @@ Object.assign(paths, {
 });
 
 // load modules before start
-import * as modules from './src/modules';
-modules.loadModules();
+export * from './src/modules';
 
 start();
