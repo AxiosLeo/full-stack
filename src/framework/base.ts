@@ -51,13 +51,35 @@ export const addRoute = (route: RouteItem): void => {
   curr['__route___'] = { ...route, params };
 };
 
+const resolveRouteInfo = (route: RouteItem, method: string, params: string[]): RouteInfo | null => {
+  const methods = route.method.toUpperCase().split('|');
+  if (methods.indexOf('ANY') > -1 || methods.indexOf(method) > -1) {
+    const routeInfo: RouteInfo = {
+      method: method as RESTfulHttpMethod,
+      pattern: route.path,
+      params: {},
+      intro: route.intro,
+      handler: route.handler
+    };
+    if (route.params) {
+      route.params.forEach((item: string, index: number) => {
+        if (typeof params[index] !== 'undefined') {
+          routeInfo.params[item] = params[index];
+        }
+      });
+    }
+    return routeInfo;
+  }
+  return null;
+};
+
 export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null => {
   const trace = resolvePathinfo(pathinfo);
   let curr = config.routes;
   let step = 0;
   const params: string[] = [];
-  while (step < trace.length + 1) {
-    const tag = trace[step] ? trace[step] : '$';
+  while (step < trace.length) {
+    const tag = trace[step];
     step++;
     if (tag === '@') {
       curr = curr[tag];
@@ -79,23 +101,7 @@ export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null
     }
   }
   if (curr && curr['__route___']) {
-    curr = curr['__route___'] as RouteItem;
-    const methods = curr['method'].toUpperCase().split('|');
-    if (methods.indexOf('ANY') > -1 || methods.indexOf(method) > -1) {
-      const routeInfo: RouteInfo = {
-        method: method as RESTfulHttpMethod,
-        pattern: curr.path,
-        params: {},
-        intro: curr.intro,
-        handler: curr.handler
-      };
-      curr.params.forEach((item: string, index: number) => {
-        if (typeof params[index] !== 'undefined') {
-          routeInfo.params[item] = params[index];
-        }
-      });
-      return routeInfo;
-    }
+    return resolveRouteInfo(curr['__route___'] as RouteItem, method, params);
   }
   return null;
 };

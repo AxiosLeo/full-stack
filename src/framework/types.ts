@@ -17,7 +17,7 @@ export interface RouteInfo {
   params: {
     [key: string]: string;
   };
-  intro: string;
+  intro?: string;
   handler: any;
 }
 
@@ -25,6 +25,7 @@ export interface RouteItem {
   path: string,
   method: string,
   handler: any,
+  params?: string[],
   intro?: string
 }
 
