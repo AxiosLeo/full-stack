@@ -1,10 +1,7 @@
-import { HttpResponse } from './response';
 import { config } from './config';
 import {
   RouteItem,
   RouteInfo,
-  StatusCode,
-  HttpStatusCode,
   RESTfulHttpMethod
 } from './types';
 
@@ -95,6 +92,7 @@ export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null
       curr = curr['**'];
     } else if (curr['***']) {
       curr = curr['***'];
+      break;
     } else {
       curr = null;
       break;
@@ -105,22 +103,3 @@ export const getRouteInfo = (pathinfo: string, method: string): RouteInfo | null
   }
   return null;
 };
-
-/**
- * Base Controller class
- */
-export class Controller {
-  format = 'json';
-  response(data: unknown, code = StatusCode.success, status: HttpStatusCode = 200, headers = {}): never {
-    throw new HttpResponse(data, code, status, headers);
-  }
-}
-
-export class Middleware {
-
-}
-
-export class Validator {
-
-}
-
