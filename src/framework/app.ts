@@ -4,7 +4,6 @@
 import { StatusCode, KoaContext, RESTfulHttpMethod } from './types';
 import { getRouteInfo } from './base';
 import { HttpError } from './response';
-import { debug } from '@axiosleo/cli-tool';
 
 import * as events from './events';
 
@@ -18,7 +17,6 @@ const begin = async (context: KoaContext): Promise<void> => {
   if (router) {
     context.router = router;
   } else {
-    debug.dump(router);
     throw new HttpError(StatusCode.notFound, 404);
   }
 };
