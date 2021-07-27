@@ -1,5 +1,7 @@
 import {
-  index
+  index,
+  route,
+  notFound,
 } from './index.controller';
 
 import { addRoute } from '../../framework';
@@ -7,11 +9,17 @@ import { addRoute } from '../../framework';
 addRoute({
   path: '/***',
   method: 'any',
-  handler: index
+  handler: notFound,
 });
 
 addRoute({
   path: '/',
   method: 'any',
   handler: index
+});
+
+addRoute({
+  path: '/route',
+  method: 'any',
+  handler: route
 });
