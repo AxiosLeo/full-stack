@@ -15,9 +15,9 @@ export const route = async (context: KoaContext): Promise<void> => {
     app_id: context.app_id,
     test: 'test content',
     router: context.router
-  }, StatusCode.unknown);
+  }, StatusCode.success);
 };
 
 export const notFound = async (context: KoaContext): Promise<void> => {
-  throw new HttpError(StatusCode.unknown, 500);
+  throw new HttpError(StatusCode.notFound, 404);
 };
