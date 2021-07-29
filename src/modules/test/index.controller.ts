@@ -5,10 +5,9 @@ import {
   HttpResponse,
 } from '../../framework';
 
-export const index = async (context: KoaContext): Promise<void> => {
+export const index = async (): Promise<void> => {
   throw new HttpResponse('hello world', StatusCode.success);
 };
-
 
 export const route = async (context: KoaContext): Promise<void> => {
   throw new HttpResponse({
@@ -18,6 +17,6 @@ export const route = async (context: KoaContext): Promise<void> => {
   }, StatusCode.success);
 };
 
-export const notFound = async (context: KoaContext): Promise<void> => {
+export const notFound = async (): Promise<void> => {
   throw new HttpError(StatusCode.notFound, 404);
 };
