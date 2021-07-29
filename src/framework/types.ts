@@ -61,6 +61,7 @@ export enum StatusCode {
   unknown = '000;Unknown Error',
   success = '200;Success',
   notFound = '404;Not Found',
+  error = '500;Internal Error',
 
   // module code : 1
   notFoundDataFile = '1-404;Not Found Data File'
