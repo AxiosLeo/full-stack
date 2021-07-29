@@ -1,7 +1,6 @@
-export * from './app';
-export * from './base';
+export * as routes from './routes';
 export * from './config';
-export * from './events';
+export * as events from './events';
 export * from './response';
 export * from './types';
 

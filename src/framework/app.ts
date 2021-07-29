@@ -1,8 +1,5 @@
-/**
- * route require elements : <module-name>/<controller-name>/<action-name>
- */
 import { StatusCode, KoaContext, RESTfulHttpMethod } from './types';
-import { getRouteInfo } from './base';
+import { getRouteInfo } from './routes';
 import { HttpError } from './response';
 
 import * as events from './events';
@@ -50,6 +47,9 @@ const controller = async (context: KoaContext): Promise<void> => {
   await handler(context);
 };
 
+/**
+ * throw 404 Http Error if not throw any HttpResponse
+ */
 const end = async (): Promise<void> => {
   throw new HttpError(StatusCode.notFound, 404);
 };

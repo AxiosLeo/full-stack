@@ -5,12 +5,6 @@ import {
   RESTfulHttpMethod
 } from './types';
 
-export const nodes = {
-  controller: {
-
-  }
-};
-
 const resolvePathinfo = (pathinfo: string): string[] => {
   let trace = [];
   if (!pathinfo || pathinfo === '/') {
@@ -23,6 +17,40 @@ const resolvePathinfo = (pathinfo: string): string[] => {
   }
   return trace;
 };
+
+export interface RouterOptions {
+  path: string,
+  method: string,
+  handler: any,
+  intro?: string
+}
+
+export class Router {
+  prefix: string;
+  routers: Router[] = [];
+  handler: any = null;
+  options?: RouterOptions
+  constructor(prefix: string, options?: RouterOptions) {
+    this.prefix = prefix;
+    if (options) {
+      if (!options.path) {
+        throw new Error('Invalid path option');
+      }
+      if (options.path[0] !== '/') {
+        options.path = '/' + options.path;
+      }
+    }
+    this.options = options;
+  }
+
+  add(router: Router): void {
+    this.routers.push(router);
+  }
+
+  handle(handler: unknown): void {
+    this.handler = handler;
+  }
+}
 
 export const addRoute = (route: RouteItem): void => {
   const pathinfo = route.path;
