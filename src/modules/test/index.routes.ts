@@ -4,21 +4,21 @@ import {
   notFound,
 } from './index.controller';
 
-import { addRoute } from '../../framework';
+import { routes } from '../../framework';
 
-addRoute({
+routes.addRoute({
   path: '/***',
   method: 'any',
   handler: notFound,
 });
 
-addRoute({
+routes.addRoute({
   path: '/',
   method: 'any',
   handler: index
 });
 
-addRoute({
+routes.addRoute({
   path: '/route',
   method: 'any',
   handler: route

@@ -1,4 +1,4 @@
-import { config, RouteItem, addRoute, getRouteInfo } from '../src/framework';
+import { config, RouteItem, routes } from '../src/framework';
 import { helper } from '@axiosleo/cli-tool';
 import * as path from 'path';
 const fs = helper.fs;
@@ -44,7 +44,7 @@ describe('Routes test cases', () => {
 
   it('shoud be ok to resolve Routes Configuration', async () => {
     config.routes = {};
-    routesConfig.forEach(r => addRoute(r));
+    routesConfig.forEach(r => routes.addRoute(r));
     routesResult = config.routes;
     const expected = await fs._read(path.join(__dirname, './assets/routes.resolve.result.json'));
     expect(expected).to.be.equal(JSON.stringify(routesResult));
@@ -52,14 +52,14 @@ describe('Routes test cases', () => {
 
   it('should be ok to get Route Info', async () => {
     config.routes = {};
-    routesConfig.forEach(r => addRoute(r));
-    let route = getRouteInfo('/test/1/a/foo/bar', 'GET');
+    routesConfig.forEach(r => routes.addRoute(r));
+    let route = routes.getRouteInfo('/test/1/a/foo/bar', 'GET');
     expect(route).to.be.exist;
     expect(route?.method).to.be.equal('GET');
     expect(route?.pattern).to.be.equal('/test/{:id}/{:title}/foo/{:bar}');
     expect(JSON.stringify(route?.params)).to.be.equal(JSON.stringify({ id: '1', title: 'a', bar: 'bar' }));
 
-    route = getRouteInfo('/has/not/exist', 'POST');
+    route = routes.getRouteInfo('/has/not/exist', 'POST');
     expect(route).to.be.null;
   });
 });

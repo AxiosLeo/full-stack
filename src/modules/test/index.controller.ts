@@ -6,7 +6,8 @@ import {
 } from '../../framework';
 
 export const index = async (): Promise<void> => {
-  throw new HttpResponse('hello world', StatusCode.success);
+  // throw new HttpResponse('hello world', StatusCode.success);
+  throw new Error('internal error');
 };
 
 export const route = async (context: KoaContext): Promise<void> => {
