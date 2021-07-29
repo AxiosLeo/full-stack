@@ -27,6 +27,15 @@ export const resolveMethod = (method?: string): RESTfulHttpMethod => {
   }
 };
 
+const resolveResult = (code: string, msg?: string, data?: any) => {
+  return {
+    code: `${code}`,
+    msg: `${msg ? msg : ''}`,
+    // eslint-disable-next-line no-undefined
+    data: data ? data : undefined,
+    request_id: uuidv5(uuidv4(), config.app_id),
+  };
+};
 
 export class HttpResponse extends Error {
   status: number
@@ -38,13 +47,7 @@ export class HttpResponse extends Error {
     this.headers = headers;
     this.status = status;
     const [c, m] = code.split(';');
-    this.result = {
-      code: `${c}`,
-      msg: `${m ? m : ''}`,
-      // eslint-disable-next-line no-undefined
-      data: data ? data : undefined,
-      request_id: uuidv5(uuidv4(), config.app_id),
-    };
+    this.result = resolveResult(c, m, data);
   }
 }
 
@@ -67,6 +70,10 @@ export class ServerError extends HttpError {
 }
 
 export const resolve = (context: KoaContext, response: HttpResponse): void => {
+  if (!(response instanceof HttpResponse)) {
+    // eslint-disable-next-line no-undefined
+    response = new HttpResponse(undefined, StatusCode.error, 500);
+  }
   context.app.type = response.format;
   context.app.body = JSON.stringify(response.result);
   context.app.response.status = response.status;
