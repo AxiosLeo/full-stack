@@ -1,8 +1,9 @@
 import { StatusCode, KoaContext, RESTfulHttpMethod } from './types';
-import { getRouteInfo } from './routes';
+import { getRouteInfo } from './internal';
 import { HttpError } from './response';
 
 import * as events from './events';
+import { helper } from '@axiosleo/cli-tool';
 
 /**
  * Do global events
@@ -43,8 +44,12 @@ const validate = async (context: KoaContext): Promise<void> => {
  */
 const controller = async (context: KoaContext): Promise<void> => {
   await events.trigger('app-controller', context);
-  const handler = context.router?.handler;
-  await handler(context);
+  const handlers = context.router?.handlers;
+  if (handlers && handlers.length) {
+    await helper.cmd._sync_foreach(handlers, async (handler) => {
+      await handler(context);
+    });
+  }
 };
 
 /**
