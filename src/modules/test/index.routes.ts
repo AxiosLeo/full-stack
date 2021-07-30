@@ -1,25 +1,32 @@
 import {
   index,
   route,
+  internal,
   notFound,
 } from './index.controller';
 
-import { routes } from '../../framework';
+import { config, Router, HttpError, StatusCode } from '../../framework';
 
-routes.addRoute({
-  path: '/***',
+config.routes.push(new Router('/', {
   method: 'any',
-  handler: notFound,
-});
-
-routes.addRoute({
-  path: '/',
+  handlers: [index]
+}));
+config.routes.push(new Router('/***', {
   method: 'any',
-  handler: index
-});
-
-routes.addRoute({
-  path: '/route',
+  handlers: [notFound]
+}));
+config.routes.push(new Router('/route', {
   method: 'any',
-  handler: route
+  handlers: [route]
+}));
+const internalRoutes = new Router('/internal', {
+  method: 'any',
+  handlers: [internal]
 });
+internalRoutes.add(new Router('/***', {
+  method: 'any',
+  handlers: [async () => {
+    throw new HttpError(StatusCode.unknown, 400);
+  }]
+}));
+config.routes.push(internalRoutes);
