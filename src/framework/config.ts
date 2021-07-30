@@ -11,7 +11,7 @@ export const config: AppConfiguration = {
   events: [],
   middleware: [],
   validator: [],
-  routes: {},
+  routes: [],
 };
 
 const root = path.join(__dirname, '../../');

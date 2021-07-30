@@ -2,6 +2,7 @@
 import Koa from 'koa';
 
 import { Context } from '@axiosleo/cli-tool';
+import { Router } from './routes';
 
 export enum RESTfulHttpMethod {
   All = 'Any',
@@ -11,14 +12,28 @@ export enum RESTfulHttpMethod {
   Delete = 'DELETE',
 }
 
-export interface RouteInfo {
-  method: RESTfulHttpMethod;
-  pattern: string;
+export interface KoaContext extends Context {
+  app: Koa.ParameterizedContext,
+  app_id: string,
+  method: RESTfulHttpMethod,
+  url: string,
+}
+
+export type ContextHandler = (context: KoaContext) => Promise<void>;
+
+export interface RouterInfo {
+  pathinfo: string;
+  handlers: ContextHandler[];
   params: {
     [key: string]: string;
   };
-  intro?: string;
-  handler: any;
+}
+
+export interface RouterOptions {
+  method: string,
+  handlers: ContextHandler[],
+  intro?: string,
+  routers?: Router[],
 }
 
 export interface RouteItem {
@@ -29,14 +44,6 @@ export interface RouteItem {
   intro?: string
 }
 
-export interface KoaContext extends Context {
-  app: Koa.ParameterizedContext,
-  app_id: string,
-  method: RESTfulHttpMethod,
-  url: string,
-  router?: RouteInfo
-}
-
 export interface AppConfiguration {
   debug: boolean,
   port: number,
@@ -44,7 +51,7 @@ export interface AppConfiguration {
   events: Array<any>,
   middleware: Array<any>,
   validator: Array<any>,
-  routes: any,
+  routes: Router[],
 }
 
 export type HttpSucceededCode = 200 | 201;

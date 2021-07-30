@@ -1,4 +1,4 @@
-export * as routes from './routes';
+export * from './routes';
 export * from './config';
 export * as events from './events';
 export * from './response';
@@ -11,6 +11,7 @@ import * as operator from './app';
 import { KoaContext } from './types';
 import { config, paths } from './config';
 import { resolve, resolveMethod } from './response';
+import { resolveRouters } from './internal';
 
 locales.init({
   dir: paths.locales,
@@ -23,6 +24,7 @@ if (!config.app_id) {
 
 export const start = (): void => {
   const koa = new Koa();
+  resolveRouters();
   koa.use(async (ctx: Koa.ParameterizedContext) => {
     const workflow = new Workflow<KoaContext>(operator);
     const context: KoaContext = {
