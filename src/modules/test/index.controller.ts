@@ -6,8 +6,7 @@ import {
 } from '../../framework';
 
 export const index = async (): Promise<void> => {
-  // throw new HttpResponse('hello world', StatusCode.success);
-  throw new Error('internal error');
+  throw new HttpResponse('hello world', StatusCode.success);
 };
 
 export const route = async (context: KoaContext): Promise<void> => {
@@ -16,6 +15,10 @@ export const route = async (context: KoaContext): Promise<void> => {
     test: 'test content',
     router: context.router
   }, StatusCode.success);
+};
+
+export const internal = async (context: KoaContext): Promise<void> => {
+  throw new Error('Internal Error');
 };
 
 export const notFound = async (): Promise<void> => {
