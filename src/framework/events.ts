@@ -1,13 +1,10 @@
-import {
-  KoaContext,
-} from './types';
 import { helper } from '@axiosleo/cli-tool';
 
 export const events: Record<string, any> = {};
 
 export const register = (
   name: string,
-  listener: (context: KoaContext) => Promise<void>
+  listener: unknown
 ): void => {
   if (!events[name]) {
     events[name] = [];
@@ -15,25 +12,12 @@ export const register = (
   events[name].push(listener);
 };
 
-export const listen = async (
-  name: string,
-  context: KoaContext
-): Promise<void> => {
+export const listen = async (name: string, ...ctx: unknown[]): Promise<void> => {
   if (!events[name]) {
     return;
   }
   const listeners = events[name];
   await helper.cmd._sync_foreach(listeners, async (listener) => {
-    await listener(context);
-  });
-};
-
-export const trigger = async (name: string): Promise<void> => {
-  if (!events[name]) {
-    return;
-  }
-  const listeners = events[name];
-  await helper.cmd._sync_foreach(listeners, async (listener) => {
-    await listener();
+    await listener(...ctx);
   });
 };
