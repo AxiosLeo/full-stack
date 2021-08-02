@@ -8,12 +8,11 @@ import {
   v4 as uuidv4,
   v5 as uuidv5
 } from 'uuid';
-import { Workflow, locales } from '@axiosleo/cli-tool';
+import { Workflow } from '@axiosleo/cli-tool';
 import * as operator from './app';
 import { KoaContext, AppLifecycle } from './types';
-import { config, paths } from './config';
 import { resolveRouters } from './internal';
-import { trigger, listen  } from './events';
+import { listen } from './events';
 
 export class HttpResponse extends Error {
   status: number
@@ -28,40 +27,42 @@ export class HttpResponse extends Error {
   }
 }
 
-locales.init({
-  dir: paths.locales,
-  sets: ['en-US', 'zh-CN']
-});
+export class Application {
+  private port: number;
+  private app_id: string;
+  constructor(port: number, app_id?: string) {
+    this.port = port;
+    this.app_id = app_id ? app_id : '';
+  }
 
-if (!config.app_id) {
-  config.app_id = uuidv4();
-}
-
-export const start = async (): Promise<void> => {
-  const koa = new Koa();
-  resolveRouters();
-  await trigger(AppLifecycle.START);
-  koa.use(async (ctx: Koa.ParameterizedContext) => {
-    const workflow = new Workflow<KoaContext>(operator);
-    const context: KoaContext = {
-      app: ctx,
-      app_id: config.app_id,
-      curr: {},
-      step_data: {},
-      method: ctx.req.method ? ctx.req.method : '',
-      url: ctx.req.url ? ctx.req.url : '/',
-      request_id: uuidv5(uuidv4(), config.app_id)
-    };
-    await listen(AppLifecycle.RECEIVE, context);
-    try {
-      await workflow.start(context);
-    } catch (exContext) {
-      if (exContext.curr.error instanceof HttpResponse) {
-        await listen(AppLifecycle.RESPONSE, context);
-      } else {
-        await listen(AppLifecycle.ERROR, context);
-      }
+  async start(): Promise<void> {
+    resolveRouters();
+    if (!this.app_id) {
+      this.app_id = uuidv4();
     }
-  });
-  koa.listen(config.port);
-};
+    const koa = new Koa();
+    await listen(AppLifecycle.START, this.port, this.app_id);
+    koa.use(async (ctx: Koa.ParameterizedContext) => {
+      const workflow = new Workflow<KoaContext>(operator);
+      const context: KoaContext = {
+        app: ctx,
+        app_id: this.app_id,
+        curr: {},
+        step_data: {},
+        method: ctx.req.method ? ctx.req.method : '',
+        url: ctx.req.url ? ctx.req.url : '/',
+        request_id: `${process.pid}-${uuidv5(uuidv4(), this.app_id)}`
+      };
+      try {
+        await workflow.start(context);
+      } catch (exContext) {
+        if (exContext.curr.error instanceof HttpResponse) {
+          await listen(AppLifecycle.RESPONSE, context);
+        } else {
+          await listen(AppLifecycle.ERROR, context);
+        }
+      }
+    });
+    koa.listen(this.port);
+  }
+}
