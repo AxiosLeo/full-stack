@@ -5,7 +5,8 @@ import {
   notFound,
 } from './index.controller';
 
-import { config, Router, HttpError, StatusCode } from '../../framework';
+import { config, Router } from '../../framework';
+import { failed, StatusCode } from '..';
 
 config.routes.push(new Router('/', {
   method: 'any',
@@ -26,7 +27,7 @@ const internalRoutes = new Router('/internal', {
 internalRoutes.add(new Router('/***', {
   method: 'any',
   handlers: [async () => {
-    throw new HttpError(StatusCode.unknown, 400);
+    failed(400, StatusCode.unknown);
   }]
 }));
 config.routes.push(internalRoutes);
