@@ -11,15 +11,9 @@ export class Router {
   options?: RouterOptions;
 
   constructor(prefix: string, options?: RouterOptions) {
-    if (!prefix) {
-      throw new Error('Invalid prefix option');
-    }
-    if (prefix[0] !== '/') {
-      prefix = '/' + prefix;
-    }
     this.prefix = prefix;
     if (options) {
-      this.method = options.method;
+      this.method = options.method ? options.method : '';
       this.handlers = options.handlers ? options.handlers : [];
       this.routers = options.routers ? options.routers : [];
     }

@@ -41,9 +41,6 @@ export const resolveRouters = (): void => {
         const params: string[] = [];
         let curr: any = routers;
         trace.forEach((t: string): void => {
-          if (!t) {
-            throw new Error('Invalid route path configuration : ' + prefix);
-          }
           let key: string;
           if (t.indexOf('{:') === 0) {
             key = '*';

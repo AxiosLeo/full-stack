@@ -45,8 +45,8 @@ export interface RouterInfo {
 }
 
 export interface RouterOptions {
-  method: string,
-  handlers: ContextHandler[],
+  method?: string,
+  handlers?: ContextHandler[],
   intro?: string,
   routers?: Router[],
 }
@@ -61,6 +61,7 @@ export interface RouteItem {
 
 export interface AppConfiguration {
   debug: boolean,
+  count: number,
   port: number,
   app_id: string,
   events: Array<any>,
