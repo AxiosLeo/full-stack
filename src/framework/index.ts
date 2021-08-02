@@ -5,13 +5,18 @@ export * from './response';
 export * from './types';
 
 import Koa from 'koa';
-import { v4 as uuidv4 } from 'uuid';
-import { printer, Workflow, locales } from '@axiosleo/cli-tool';
+import {
+  v4 as uuidv4,
+  v5 as uuidv5
+} from 'uuid';
+import { Workflow, locales } from '@axiosleo/cli-tool';
 import * as operator from './app';
 import { KoaContext } from './types';
 import { config, paths } from './config';
-import { resolve, resolveMethod } from './response';
+import { resolveMethod, HttpResponse } from './response';
 import { resolveRouters } from './internal';
+import { trigger, listen, AppLifecycle } from './events';
+
 
 locales.init({
   dir: paths.locales,
@@ -22,9 +27,10 @@ if (!config.app_id) {
   config.app_id = uuidv4();
 }
 
-export const start = (): void => {
+export const start = async (): Promise<void> => {
   const koa = new Koa();
   resolveRouters();
+  await trigger(AppLifecycle.START);
   koa.use(async (ctx: Koa.ParameterizedContext) => {
     const workflow = new Workflow<KoaContext>(operator);
     const context: KoaContext = {
@@ -33,18 +39,19 @@ export const start = (): void => {
       curr: {},
       step_data: {},
       method: resolveMethod(ctx.req.method),
-      url: ctx.req.url ? ctx.req.url : '/'
+      url: ctx.req.url ? ctx.req.url : '/',
+      request_id: uuidv5(uuidv4(), config.app_id)
     };
+    await listen(AppLifecycle.RECEIVE, context);
     try {
       await workflow.start(context);
-    } catch (e) {
-      resolve(context, e.curr.error);
+    } catch (exContext) {
+      if (exContext.curr.error instanceof HttpResponse) {
+        await listen(AppLifecycle.RESPONSE, context);
+      } else {
+        await listen(AppLifecycle.ERROR, context);
+      }
     }
   });
   koa.listen(config.port);
-  printer.println().green('start on ')
-    .println(`http://localhost:${config.port}`)
-    .println();
-  printer.yellow('app_id    : ').print(config.app_id).println();
-  printer.yellow('workflows : ').print(Object.keys(operator).join(' -> ')).println().println();
 };
