@@ -14,11 +14,9 @@ import {
 import { error, failed, StatusCode } from './response';
 
 events.register(AppLifecycle.START, async (port: number, app_id: string) => {
-  printer.println().green('start on ')
-    .println(`http://localhost:${port}`)
-    .println();
-  printer.yellow('app_id  : ').print(app_id).println();
-  printer.yellow('process : ').print(`${process.pid}`).println();
+  printer.input('-'.repeat(60));
+  printer.yellow('app_id     : ').print(app_id).println();
+  printer.yellow('process_id : ').print(`${process.pid}`).println();
 });
 
 events.register(AppLifecycle.RECEIVE, async (context: KoaContext) => {
