@@ -4,18 +4,33 @@ import Koa from 'koa';
 import { Context } from '@axiosleo/cli-tool';
 import { Router } from './routes';
 
-export enum RESTfulHttpMethod {
-  All = 'Any',
-  Create = 'POST',
-  Read = 'GET',
-  Update = 'PUT',
-  Delete = 'DELETE',
+export const AppLifecycle = {
+  START: 'start',
+  RECEIVE: 'receive',
+  MIDDLEWARE: 'middleware',
+  VALIDATE: 'validate',
+  CONTROLLER: 'controller',
+  RESPONSE: 'response',
+  ERROR: 'error',
+};
+
+export class HttpResponse extends Error {
+  status: number
+  data: Record<string, unknown> = {}
+  headers: Record<string, string>
+  format = 'json'
+  constructor(httpStatus: number, data: Record<string, unknown>, headers: Record<string, string> = {}) {
+    super();
+    this.headers = headers;
+    this.status = httpStatus;
+    this.data = data;
+  }
 }
 
 export interface KoaContext extends Context {
   app: Koa.ParameterizedContext,
   app_id: string,
-  method: RESTfulHttpMethod,
+  method: string,
   url: string,
 }
 

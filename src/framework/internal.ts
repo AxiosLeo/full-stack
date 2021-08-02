@@ -1,7 +1,6 @@
 
 import {
   RouterInfo,
-  RESTfulHttpMethod,
 } from './types';
 
 import { Router } from './routes';
@@ -70,7 +69,7 @@ export const resolveRouters = (): void => {
   }
 };
 
-export const getRouteInfo = (pathinfo: string, method: RESTfulHttpMethod): RouterInfo | null => {
+export const getRouteInfo = (pathinfo: string, method: string): RouterInfo | null => {
   const trace = resolvePathinfo(pathinfo);
   let curr = routers;
   let step = 0;

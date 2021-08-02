@@ -1,7 +1,6 @@
 export * from './routes';
 export * from './config';
 export * as events from './events';
-export * from './response';
 export * from './types';
 
 import Koa from 'koa';
@@ -11,12 +10,23 @@ import {
 } from 'uuid';
 import { Workflow, locales } from '@axiosleo/cli-tool';
 import * as operator from './app';
-import { KoaContext } from './types';
+import { KoaContext, AppLifecycle } from './types';
 import { config, paths } from './config';
-import { resolveMethod, HttpResponse } from './response';
 import { resolveRouters } from './internal';
-import { trigger, listen, AppLifecycle } from './events';
+import { trigger, listen  } from './events';
 
+export class HttpResponse extends Error {
+  status: number
+  data: Record<string, unknown> = {}
+  headers: Record<string, string>
+  format = 'json'
+  constructor(httpStatus: number, data: Record<string, unknown>, headers: Record<string, string> = {}) {
+    super();
+    this.headers = headers;
+    this.status = httpStatus;
+    this.data = data;
+  }
+}
 
 locales.init({
   dir: paths.locales,
@@ -38,7 +48,7 @@ export const start = async (): Promise<void> => {
       app_id: config.app_id,
       curr: {},
       step_data: {},
-      method: resolveMethod(ctx.req.method),
+      method: ctx.req.method ? ctx.req.method : '',
       url: ctx.req.url ? ctx.req.url : '/',
       request_id: uuidv5(uuidv4(), config.app_id)
     };

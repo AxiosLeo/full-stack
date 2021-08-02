@@ -1,7 +1,7 @@
-import { KoaContext, RESTfulHttpMethod } from './types';
+import { KoaContext, AppLifecycle } from './types';
 import { getRouteInfo } from './internal';
 
-import { listen,AppLifecycle} from './events';
+import { listen } from './events';
 import { helper } from '@axiosleo/cli-tool';
 
 /**
@@ -10,7 +10,7 @@ import { helper } from '@axiosleo/cli-tool';
  */
 const begin = async (context: KoaContext): Promise<void> => {
   await listen(AppLifecycle.RECEIVE, context);
-  const router = getRouteInfo(context.url, context.app.req.method as RESTfulHttpMethod);
+  const router = getRouteInfo(context.url, context.method);
   if (router) {
     context.router = router;
   }
