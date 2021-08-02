@@ -6,6 +6,7 @@ import {
 
 export const config: AppConfiguration = {
   debug: false,
+  count: 4,
   port: 3300,
   app_id: '',
   events: [],

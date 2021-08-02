@@ -1,19 +1,30 @@
-import { start, config, paths } from './src/framework';
-import * as path from 'path';
+import { config, Application } from './src/framework';
+import cluster from 'cluster';
+import { cpus } from 'os';
+import { rootRouter } from './src/modules';
 
-Object.assign(config, {
-  debug: true,
-  port: 3333,
-});
+const numCPUs = cpus().length;
 
-const root = __dirname;
-Object.assign(paths, {
-  root: root,
-  cache: path.join(root, 'runtime/'),
-  locales: path.join(root, 'locales'),
-});
+config.debug = true;
+config.routes = [rootRouter];
 
-// load modules before start
-export * from './src/modules';
+if (cluster.isMaster) {
+  console.log(`This machine has ${numCPUs} CPUs.`);
+  for (let i = 0; i < config.count; i++) {
+    cluster.fork();
+  }
 
-start();
+  cluster.on('online', (worker) => {
+    console.log(`Worker ${worker.process.pid} is online`);
+  });
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died with code: ${code} and signal: ${signal}`);
+    console.log('Starting a new worker...');
+    cluster.fork();
+  });
+} else {
+  // load modules before start
+  const app = new Application(3333, config.app_id);
+  app.start();
+}
