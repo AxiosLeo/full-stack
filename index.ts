@@ -10,7 +10,8 @@ config.routes = [rootRouter];
 
 if (cluster.isMaster) {
   console.log(`This machine has ${numCPUs} CPUs.`);
-  for (let i = 0; i < config.count; i++) {
+  const count = !config.count ? numCPUs : config.count;
+  for (let i = 0; i < count; i++) {
     cluster.fork();
   }
 
