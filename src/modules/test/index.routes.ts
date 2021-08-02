@@ -5,18 +5,25 @@ import {
   notFound,
 } from './index.controller';
 
-import { config, Router } from '../../framework';
+import { Router } from '../../framework';
 import { failed, StatusCode } from '..';
 
-config.routes.push(new Router('/', {
+export const testRouter: Router = new Router('');
+
+testRouter.add(new Router('/', {
   method: 'any',
   handlers: [index]
 }));
-config.routes.push(new Router('/***', {
+
+testRouter.add(new Router('/', {
+  method: 'any',
+  handlers: [index]
+}));
+testRouter.add(new Router('/***', {
   method: 'any',
   handlers: [notFound]
 }));
-config.routes.push(new Router('/route', {
+testRouter.add(new Router('/route', {
   method: 'any',
   handlers: [route]
 }));
@@ -30,4 +37,4 @@ internalRoutes.add(new Router('/***', {
     failed(400, StatusCode.unknown);
   }]
 }));
-config.routes.push(internalRoutes);
+testRouter.add(internalRoutes);

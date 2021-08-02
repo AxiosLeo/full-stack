@@ -1,7 +1,9 @@
 export * from './test';
 export * from './response';
+export * from './routes';
 
 import { printer } from '@axiosleo/cli-tool';
+import process from 'process';
 import {
   config,
   events,
@@ -11,11 +13,12 @@ import {
 } from '../framework';
 import { error, failed, StatusCode } from './response';
 
-events.register(AppLifecycle.START, async () => {
+events.register(AppLifecycle.START, async (port: number, app_id: string) => {
   printer.println().green('start on ')
-    .println(`http://localhost:${config.port}`)
+    .println(`http://localhost:${port}`)
     .println();
-  printer.yellow('app_id : ').print(config.app_id).println();
+  printer.yellow('app_id  : ').print(app_id).println();
+  printer.yellow('process : ').print(`${process.pid}`).println();
 });
 
 events.register(AppLifecycle.RECEIVE, async (context: KoaContext) => {
