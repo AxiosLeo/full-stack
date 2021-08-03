@@ -49,3 +49,7 @@ events.register(AppLifecycle.ERROR, async (context: KoaContext): Promise<void> =
     await events.listen('response', context);
   }
 });
+
+events.register(AppLifecycle.DONE, async (context: KoaContext): Promise<void> => {
+  // printer.input(context.request_id);
+});

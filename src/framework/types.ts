@@ -12,6 +12,7 @@ export const AppLifecycle = {
   CONTROLLER: 'controller',
   RESPONSE: 'response',
   ERROR: 'error',
+  DONE: 'done',
 };
 
 export class HttpResponse extends Error {

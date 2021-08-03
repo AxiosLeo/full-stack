@@ -59,6 +59,7 @@ export class Application {
           await listen(AppLifecycle.ERROR, context);
         }
       }
+      await listen(AppLifecycle.DONE, context);
     });
     koa.listen(this.port);
   }

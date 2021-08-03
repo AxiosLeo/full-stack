@@ -17,6 +17,15 @@ if (cluster.isMaster) {
   for (let i = 0; i < count; i++) {
     cluster.fork();
   }
+  cluster.on('listening', (worker,address) => {
+    console.log(`Worker ${worker.process.pid} listening : ` + address.port);
+  });
+  cluster.on('message', (worker) => {
+    console.log(`Worker ${worker.process.pid} get message`);
+  });
+  cluster.on('disconnect', (worker) => {
+    console.log(`Worker ${worker.process.pid} disconnect.`);
+  });
   cluster.on('exit', (worker, code, signal) => {
     console.log(`Worker ${worker.process.pid} died with code: ${code} and signal: ${signal}`);
     console.log('Starting a new worker...');
