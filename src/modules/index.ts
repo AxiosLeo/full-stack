@@ -3,20 +3,24 @@ export * from './response';
 export * from './routes';
 
 import { printer } from '@axiosleo/cli-tool';
+import { v4 as uuidv4 } from 'uuid';
 import process from 'process';
 import {
   config,
   events,
-  AppLifecycle,
   KoaContext,
-  HttpResponse
+  Application,
+  HttpResponse,
+  AppLifecycle,
 } from '../framework';
 import { error, failed, StatusCode } from './response';
 
-events.register(AppLifecycle.START, async (port: number, app_id: string) => {
+events.register(AppLifecycle.START, async (app: Application) => {
+  if (!app.app_id) {
+    app.app_id = `${process.pid}-${uuidv4()}`;
+  }
   printer.input('-'.repeat(60));
-  printer.yellow('app_id     : ').print(app_id).println();
-  printer.yellow('process_id : ').print(`${process.pid}`).println();
+  printer.yellow('worker_id : ').print(app.app_id).println();
 });
 
 events.register(AppLifecycle.RECEIVE, async (context: KoaContext) => {

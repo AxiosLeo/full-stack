@@ -28,8 +28,8 @@ export class HttpResponse extends Error {
 }
 
 export class Application {
-  private port: number;
-  private app_id: string;
+  port: number;
+  app_id: string;
   constructor(port: number, app_id?: string) {
     this.port = port;
     this.app_id = app_id ? app_id : '';
@@ -37,11 +37,8 @@ export class Application {
 
   async start(): Promise<void> {
     resolveRouters();
-    if (!this.app_id) {
-      this.app_id = uuidv4();
-    }
     const koa = new Koa();
-    await listen(AppLifecycle.START, this.port, this.app_id);
+    await listen(AppLifecycle.START, this);
     koa.use(async (ctx: Koa.ParameterizedContext) => {
       const workflow = new Workflow<KoaContext>(operator);
       const context: KoaContext = {
