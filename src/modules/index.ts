@@ -17,10 +17,10 @@ import { error, failed, StatusCode } from './response';
 
 events.register(AppLifecycle.START, async (app: Application) => {
   if (!app.app_id) {
-    app.app_id = `${process.pid}-${uuidv4()}`;
+    app.app_id = uuidv4();
   }
   printer.input('-'.repeat(60));
-  printer.yellow('worker_id : ').print(app.app_id).println();
+  printer.yellow('worker_id : ').print(`${process.pid}-${app.app_id}`).println();
 });
 
 events.register(AppLifecycle.RECEIVE, async (context: KoaContext) => {
