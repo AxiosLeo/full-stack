@@ -94,8 +94,13 @@ export const getRouteInfo = (pathinfo: string, method: string): RouterInfo | nul
       break;
     }
   }
+  let route: RouterItem | null = null;
   if (curr && curr['__route___']) {
-    const route = curr['__route___'] as RouterItem;
+    route = curr['__route___'] as RouterItem;
+  } else if (curr && curr[''] && curr['']['__route___']) {
+    route = curr['']['__route___'] as RouterItem;
+  }
+  if (route) {
     const methods = route.router.method.toUpperCase().split('|');
     if (methods.indexOf('ANY') > -1 || methods.indexOf(method) > -1) {
       const routeInfo: RouterInfo = {
