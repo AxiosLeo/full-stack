@@ -12,6 +12,7 @@ export const AppLifecycle = {
   CONTROLLER: 'controller',
   RESPONSE: 'response',
   ERROR: 'error',
+  NOT_FOUND: 'notFound',
   DONE: 'done',
 };
 
