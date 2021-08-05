@@ -1,6 +1,5 @@
 import { KoaContext, AppLifecycle } from './types';
 import { getRouteInfo } from './internal';
-
 import { listen } from './events';
 import { helper } from '@axiosleo/cli-tool';
 
@@ -13,6 +12,8 @@ const begin = async (context: KoaContext): Promise<void> => {
   const router = getRouteInfo(context.url, context.method);
   if (router) {
     context.router = router;
+  } else {
+    listen(AppLifecycle.NOT_FOUND, context);
   }
 };
 
