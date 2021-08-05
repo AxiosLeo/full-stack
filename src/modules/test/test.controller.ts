@@ -1,7 +1,7 @@
 import {
   KoaContext,
 } from '../../framework';
-import { StatusCode, success, failed, response } from '../';
+import { StatusCode, success, failed, response } from '../..';
 
 export const index = async (): Promise<void> => {
   success('hello world');

@@ -3,10 +3,10 @@ import {
   route,
   internal,
   notFound,
-} from './index.controller';
+} from './test.controller';
 
 import { Router } from '../../framework';
-import { failed, StatusCode } from '..';
+import { failed, StatusCode } from '../..';
 
 export const testRouter: Router = new Router('');
 
