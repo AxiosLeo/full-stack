@@ -15,7 +15,7 @@ export const route = async (context: KoaContext): Promise<void> => {
   }, StatusCode.success, 200);
 };
 
-export const internal = async (context: KoaContext): Promise<void> => {
+export const internal = async (): Promise<void> => {
   throw new Error('Internal Error');
 };
 

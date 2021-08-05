@@ -48,7 +48,7 @@ export class Application {
         step_data: {},
         method: ctx.req.method ? ctx.req.method : '',
         url: ctx.req.url ? ctx.req.url : '/',
-        request_id: `${process.pid}-${uuidv5(uuidv4(), !this.app_id ? uuidv4() : this.app_id)}`
+        request_id: `${uuidv5(uuidv4(), !this.app_id ? uuidv4() : this.app_id)}`
       };
       try {
         await workflow.start(context);
