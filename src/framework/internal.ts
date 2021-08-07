@@ -4,9 +4,6 @@ import {
 } from './types';
 
 import { Router } from './routes';
-import { config } from './config';
-
-const routers: any = {};
 
 interface RouterItem {
   prefix: string;
@@ -27,7 +24,8 @@ const resolvePathinfo = (pathinfo: string): string[] => {
   return trace;
 };
 
-export const resolveRouters = (): void => {
+export const resolveRouters = (routes: Router[]): void => {
+  const routers: any = {};
   if (!routers['@']) {
     const recur = (prefix: string, router: Router) => {
       prefix = prefix + router.prefix;
@@ -60,13 +58,15 @@ export const resolveRouters = (): void => {
         };
       }
     };
-    config.routes.forEach(item => recur('', item));
+    routes.forEach(item => recur('', item));
   } else {
     throw new Error('Only exec on app start');
   }
+  return routers;
 };
 
-export const getRouteInfo = (pathinfo: string, method: string): RouterInfo | null => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export const getRouteInfo = (routers: any, pathinfo: string, method: string): RouterInfo | null => {
   const trace = resolvePathinfo(pathinfo);
   let curr = routers;
   let step = 0;
