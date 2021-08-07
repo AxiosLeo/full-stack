@@ -3,6 +3,7 @@ import Koa from 'koa';
 
 import { Context } from '@axiosleo/cli-tool';
 import { Router } from './routes';
+import { Application } from './index';
 
 export const AppLifecycle = {
   START: 'start',
@@ -30,7 +31,8 @@ export class HttpResponse extends Error {
 }
 
 export interface KoaContext extends Context {
-  app: Koa.ParameterizedContext,
+  app: Application,
+  koa: Koa.ParameterizedContext,
   app_id: string,
   method: string,
   url: string,
@@ -61,13 +63,17 @@ export interface RouteItem {
   intro?: string
 }
 
+export interface AppPaths {
+  root: string;
+  cache?: string;
+  locales?: string;
+}
+
 export interface AppConfiguration {
-  debug: boolean,
-  count: number,
+  [key: string]: any;
+  debug?: boolean,
+  count?: number,
   port: number,
-  app_id: string,
-  events: Array<any>,
-  middleware: Array<any>,
-  validator: Array<any>,
-  routes: Router[],
+  app_id?: string,
+  paths?: Record<string, string>
 }
