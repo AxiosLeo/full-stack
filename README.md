@@ -9,21 +9,15 @@ npm run dev
 
 ## Configuration
 
-change [index.ts](./index.ts) file to set configuration like following:
+change [index.ts](./index.ts) file to start application:
 
 ```typescript
-import { config, paths } from './src/framework';
-import * as path from 'path';
+import { Application } from './src/framework';
 
-Object.assign(config, {
-  debug: true,
-  port: 3333,
+const app = new Application({
+  debug: false,
+  port: port,
+  app_id: '',
 });
-
-const root = __dirname;
-Object.assign(paths, {
-  root: root,
-  cache: path.join(root, 'runtime/'),
-  locales: path.join(root, 'locales'),
-});
+app.start([rootRouter]);
 ```
