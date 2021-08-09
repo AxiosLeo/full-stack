@@ -28,16 +28,17 @@ export class HttpResponse extends Error {
   }
 }
 
-export class Application {
-  config: Configuration;
+export class Application extends Configuration {
+  app_id: string;
   events: unknown[] = [];
   middleware: ContextHandler[] = [];
   validator: ContextHandler[] = [];
   routes: Router[] = [];
   constructor(config: AppConfiguration) {
-    this.config = new Configuration(config);
-    if (!this.config.app_id) {
-      this.config.app_id = uuidv4();
+    super(config);
+    this.app_id = config.app_id ? config.app_id : '';
+    if (!this.app_id) {
+      this.app_id = uuidv4();
     }
   }
 
@@ -81,6 +82,6 @@ export class Application {
       }
       return null;
     });
-    koa.listen(this.config.port);
+    koa.listen(this.port);
   }
 }

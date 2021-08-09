@@ -14,15 +14,15 @@ import {
 import { error, failed, StatusCode } from './response';
 
 events.register(AppLifecycle.START, async (app: Application) => {
-  if (!app.config.app_id) {
-    app.config.app_id = uuidv4();
+  if (!app.app_id) {
+    app.app_id = uuidv4();
   }
   printer.input('-'.repeat(60));
-  printer.yellow('worker_id : ').print(`${process.pid}-${app.config.app_id}`).println();
+  printer.yellow('worker_id : ').print(`${process.pid}-${app.app_id}`).println();
 });
 
 events.register(AppLifecycle.RECEIVE, async (context: KoaContext) => {
-  if (context.app.config.debug) {
+  if (context.app.debug) {
     printer.info('receive request : ' + context.request_id);
   }
 });
@@ -37,7 +37,7 @@ events.register(AppLifecycle.RESPONSE, async (context: KoaContext) => {
 
 events.register(AppLifecycle.ERROR, async (context: KoaContext): Promise<void> => {
   try {
-    if (context.app.config.debug) {
+    if (context.app.debug) {
       await error(500, context.curr.error ? context.curr.error : new Error('Internal Server Error'));
     } else {
       await failed(500, StatusCode.error);
