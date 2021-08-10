@@ -5,15 +5,13 @@ import { rootRouter } from './src/modules';
 import { printer } from '@axiosleo/cli-tool';
 
 const numCPUs = cpus().length;
-printer.warning(`current CPU number: ${numCPUs}`);
 const port = 3300;
 const process_count = 1;
 
 if (cluster.isMaster) {
-  printer.println().green('start on ')
-    .println(`http://localhost:${port}`)
-    .println();
-
+  printer.yellow(`current CPU number: ${numCPUs}`).println().println();
+  printer.green('start on ')
+    .println(`http://localhost:${port}`);
   for (let i = 0; i < process_count; i++) {
     cluster.fork();
   }
