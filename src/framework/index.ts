@@ -51,12 +51,12 @@ export class Application extends Configuration {
       const context: KoaContext = {
         app: this,
         koa: ctx,
-        app_id: this.config.app_id,
+        app_id: this.app_id,
         curr: {},
         step_data: {},
         method: ctx.req.method ? ctx.req.method : '',
         url: ctx.req.url ? ctx.req.url : '/',
-        request_id: `${uuidv5(uuidv4(), !validate(this.config.app_id) ? uuidv4() : this.config.app_id)}`
+        request_id: `${uuidv5(uuidv4(), !validate(this.app_id) ? uuidv4() : this.app_id)}`
       };
       const router: Router | null = await next();
       if (!router) {
