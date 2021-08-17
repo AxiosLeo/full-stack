@@ -75,6 +75,10 @@ export const getRouteInfo = (routers: any, pathinfo: string, method: string): Ro
     const tag = trace[step];
     step++;
     if (tag === '@') {
+      if(!curr[tag]){
+        curr = null;
+        break;
+      }
       curr = curr[tag];
       continue;
     }
