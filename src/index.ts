@@ -35,6 +35,7 @@ events.register(AppLifecycle.RESPONSE, async (context: KoaContext) => {
   const response = context.curr?.error as HttpResponse;
   context.koa.type = response.format;
   response.data.request_id = context.request_id;
+  response.data.timestamp = (new Date()).getTime();
   context.koa.body = JSON.stringify(response.data);
   context.koa.response.status = response.status;
 });
