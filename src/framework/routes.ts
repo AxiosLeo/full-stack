@@ -23,3 +23,5 @@ export class Router {
     this.routers.push(router);
   }
 }
+
+export const routers: Router[] = [];

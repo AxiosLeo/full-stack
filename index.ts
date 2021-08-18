@@ -1,8 +1,8 @@
-import { Application } from './src/framework';
+
 import cluster from 'cluster';
 import { cpus } from 'os';
-import { rootRouter } from './src/modules';
 import { printer } from '@axiosleo/cli-tool';
+import { start } from './src';
 
 const numCPUs = cpus().length;
 const port = 3300;
@@ -31,10 +31,5 @@ if (cluster.isMaster) {
     cluster.fork();
   });
 } else {
-  const app = new Application({
-    debug: false,
-    port: port,
-    app_id: '',
-  });
-  app.start([rootRouter]);
+  start(port, false);
 }

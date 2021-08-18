@@ -1,17 +1,21 @@
 export * from './response';
 export * from './modules';
 
+import { rootRouter } from './modules';
 import { printer } from '@axiosleo/cli-tool';
 import { v4 as uuidv4 } from 'uuid';
 import process from 'process';
 import {
   events,
+  routers,
   KoaContext,
   Application,
   HttpResponse,
   AppLifecycle,
 } from './framework';
 import { error, failed, StatusCode } from './response';
+
+routers.push(rootRouter);
 
 events.register(AppLifecycle.START, async (app: Application) => {
   if (!app.app_id) {
@@ -60,3 +64,12 @@ events.register(AppLifecycle.NOT_FOUND, async (context: KoaContext): Promise<voi
 // events.register(AppLifecycle.DONE, async (context: KoaContext): Promise<void> => {
 // // printer.input(context.request_id);
 // });
+
+export const start = async (port: number, debug = false): Promise<void> => {
+  const app = new Application({
+    debug,
+    port,
+    app_id: '',
+  });
+  app.start(routers);
+};

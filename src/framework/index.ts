@@ -42,8 +42,8 @@ export class Application extends Configuration {
     }
   }
 
-  async start(routers: Router[], options?: Record<string, string>): Promise<void> {
-    const routes = resolveRouters(routers);
+  async start(routers?: Router[], options?: Record<string, string>): Promise<void> {
+    const routes = resolveRouters(routers ? routers : []);
     const koa = new Koa(options);
     await listen(AppLifecycle.START, this);
     const workflow = new Workflow<KoaContext>(operator);
