@@ -27,7 +27,7 @@ events.register(AppLifecycle.START, async (app: Application) => {
 
 events.register(AppLifecycle.RECEIVE, async (context: KoaContext) => {
   if (context.app.debug) {
-    printer.info('receive request : ' + context.request_id);
+    printer.input('receive request : ' + context.request_id);
   }
 });
 
@@ -62,9 +62,11 @@ events.register(AppLifecycle.NOT_FOUND, async (context: KoaContext): Promise<voi
   }
 });
 
-// events.register(AppLifecycle.DONE, async (context: KoaContext): Promise<void> => {
-// // printer.input(context.request_id);
-// });
+events.register(AppLifecycle.DONE, async (context: KoaContext): Promise<void> => {
+  if (context.app.debug && context.curr.error instanceof HttpResponse) {
+    console.log(JSON.stringify(context.curr.error.data));
+  }
+});
 
 export const start = async (port: number, debug = false): Promise<void> => {
   const app = new Application({

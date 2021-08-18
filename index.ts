@@ -6,6 +6,7 @@ import { start } from './src';
 
 const numCPUs = cpus().length;
 const port = 3300;
+const debug = true;
 const process_count = 1;
 
 if (cluster.isMaster) {
@@ -31,5 +32,5 @@ if (cluster.isMaster) {
     cluster.fork();
   });
 } else {
-  start(port, false);
+  start(port, debug);
 }
