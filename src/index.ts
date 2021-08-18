@@ -41,6 +41,7 @@ events.register(AppLifecycle.RESPONSE, async (context: KoaContext) => {
 
 events.register(AppLifecycle.ERROR, async (context: KoaContext): Promise<void> => {
   try {
+    console.error(context.curr.error);
     if (context.app.debug) {
       await error(500, context.curr.error ? context.curr.error : new Error('Internal Server Error'));
     } else {
