@@ -1,7 +1,6 @@
 export * from './response';
 export * from './modules';
 
-import { rootRouter } from './modules';
 import { printer } from '@axiosleo/cli-tool';
 import { v4 as uuidv4 } from 'uuid';
 import process from 'process';
@@ -14,8 +13,6 @@ import {
   AppLifecycle,
 } from './framework';
 import { error, failed, StatusCode } from './response';
-
-routers.push(rootRouter);
 
 events.register(AppLifecycle.START, async (app: Application) => {
   if (!app.app_id) {

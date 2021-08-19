@@ -5,36 +5,43 @@ import {
   notFound,
 } from './test.controller';
 
-import { Router } from '../../framework';
+import { Router, routers } from '../../framework';
 import { failed, StatusCode } from '../..';
 
 export const testRouter: Router = new Router('');
 
-testRouter.add(new Router('/', {
+testRouter.new('/', {
   method: 'any',
   handlers: [index]
-}));
+});
 
-testRouter.add(new Router('/', {
+testRouter.new('/', {
   method: 'any',
   handlers: [index]
-}));
-testRouter.add(new Router('/***', {
+});
+
+testRouter.new('/***', {
   method: 'any',
   handlers: [notFound]
-}));
-testRouter.add(new Router('/route', {
+});
+
+testRouter.new('/route', {
   method: 'any',
   handlers: [route]
-}));
+});
+
 const internalRoutes = new Router('/internal', {
   method: 'any',
   handlers: [internal]
 });
-internalRoutes.add(new Router('/***', {
+
+internalRoutes.new('/***', {
   method: 'any',
   handlers: [async () => {
     failed(400, StatusCode.unknown);
   }]
-}));
+});
+
 testRouter.add(internalRoutes);
+
+routers.push(testRouter);

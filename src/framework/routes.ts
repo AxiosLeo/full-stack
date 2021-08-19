@@ -22,6 +22,11 @@ export class Router {
   add(router: Router): void {
     this.routers.push(router);
   }
+
+  new(prefix: string, options?: RouterOptions): void {
+    const router = new Router(prefix, options);
+    this.add(router);
+  }
 }
 
 export const routers: Router[] = [];
