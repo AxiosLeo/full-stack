@@ -1,11 +1,9 @@
-export * from './test';
-
-import { testRouter } from './test';
+import test from './test/test.routes';
 
 import { Router, routers } from '../framework';
 
-const testModuleRouter = new Router('/test', {
-  routers: [testRouter]
-});
+const root = new Router('');
+root.new('/test', test);
 
-routers.push(testModuleRouter);
+routers.push(root);
+routers.push(test);

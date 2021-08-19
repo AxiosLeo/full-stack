@@ -5,10 +5,10 @@ import {
   notFound,
 } from './test.controller';
 
-import { Router, routers } from '../../framework';
+import { Router } from '../../framework';
 import { failed, StatusCode } from '../..';
 
-export const testRouter: Router = new Router('');
+const testRouter: Router = new Router('');
 
 testRouter.new('/', {
   method: 'any',
@@ -44,4 +44,4 @@ internalRoutes.new('/***', {
 
 testRouter.add(internalRoutes);
 
-routers.push(testRouter);
+export default testRouter;
