@@ -13,6 +13,7 @@ export enum StatusCode {
   success = '200;Success',
   notFound = '404;Not Found',
   error = '500;Internal Server Error',
+  invalidSignature = '400;Invalid Signature',
 
   // module code : 1
   notFoundDataFile = '1-404;Not Found Data File'
@@ -45,10 +46,9 @@ export const failed = (status: number, code: StatusCode, headers?: Record<string
   }, headers ? headers : {});
 };
 
-export const error = (status: number, e: Error, headers?: Record<string, string>):never => {
+export const error = (status: number, msg: string, headers?: Record<string, string>):never => {
   throw new HttpResponse(status, {
     code: status,
-    message: e.message,
-    data: e.stack,
+    message: msg,
   }, headers ? headers : {});
 };
