@@ -22,3 +22,7 @@ export const internal = async (): Promise<void> => {
 export const notFound = async (): Promise<void> => {
   failed(404, StatusCode.notFound);
 };
+
+export const sign = async (): Promise<void> => {
+  response('check signature successfully', StatusCode.success, 200);
+};

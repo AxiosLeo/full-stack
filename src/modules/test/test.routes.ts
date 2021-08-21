@@ -1,10 +1,12 @@
 import {
+  sign,
   index,
   route,
   internal,
   notFound,
 } from './test.controller';
 
+import { checkSignature } from '../../services/signature';
 import { Router } from '../../framework';
 import { failed, StatusCode } from '../..';
 
@@ -28,6 +30,11 @@ testRouter.new('/***', {
 testRouter.new('/route', {
   method: 'any',
   handlers: [route]
+});
+
+testRouter.new('/sign', {
+  method: 'any',
+  handlers: [checkSignature, sign]
 });
 
 const internalRoutes = new Router('/internal', {
