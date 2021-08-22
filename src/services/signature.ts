@@ -2,21 +2,34 @@ import {
   KoaContext,
 } from '../framework';
 
-import { error, response, StatusCode } from '../response';
+import { error } from '../response';
+import crypto from 'crypto';
 
 const signHeaders = [
-  'user-agent',
-  'host',
-  'content-type',
   'content-length',
+  'content-md5',
+  'content-type',
+  'host',
+  'user-agent',
   'x-app-key',
   'x-signature-method',
   'x-timestamp'
 ];
 
-// const signatureMethods = [
-//   'HmacSHA1'
-// ];
+const signatureMethods: Record<string, (str: string, secret: string) => Promise<Buffer>> = {
+  hmacsha1: async (str: string, secret: string): Promise<Buffer> => {
+    const obj = crypto.createHmac('sha1',secret);
+    obj.update(str);
+    return obj.digest();
+  },
+  hmansha256: async (str: string, secret: string): Promise<Buffer> => {
+    const obj = crypto.createHmac('sha256', secret);
+    obj.update(str);
+    return obj.digest();
+  }
+};
+
+const secretKey = 'test';
 
 export const checkSignature = async (context: KoaContext): Promise<void> => {
   const headers = context.koa.request.headers;
@@ -41,9 +54,16 @@ export const checkSignature = async (context: KoaContext): Promise<void> => {
   signStr = signStr + Object.keys(query).sort().map((key: string) => {
     return `key:${query[key] ? query[key] : ''}`;
   }).join(',') + '\n';
-  response({
-    sign_string: signStr,
-    nowTimestamp,
-    requestTimestamp
-  }, StatusCode.success, 200);
+
+  const signatureMethod = !headers['x-signature-method'] ? 'hmacsha1' : headers['x-signature-method'] as string;
+
+  if (signatureMethods[signatureMethod]) {
+    const handler = signatureMethods[signatureMethod];
+    const signature = await handler(signStr, secretKey);
+    if (signature.toString() !== requestSignature) {
+      error(400, `Signature is not matched. string on server to sign is "${signStr}"`);
+    }
+  } else {
+    error(400, `Unsupported signature method: ${signatureMethod}. Only supported ${Object.keys(signatureMethods).join(',')}`);
+  }
 };
