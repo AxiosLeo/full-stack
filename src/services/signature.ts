@@ -13,6 +13,7 @@ const signHeaders = [
   'user-agent',
   'x-app-key',
   'x-signature-method',
+  'x-signature-nonce',
   'x-timestamp'
 ];
 
@@ -42,7 +43,7 @@ export const checkSignature = async (context: KoaContext): Promise<void> => {
     error(400, 'Lost X-Timestamp header');
   }
   const nowTimestamp = (new Date()).valueOf();
-  if (nowTimestamp - requestTimestamp > 10000) {
+  if (Math.abs(nowTimestamp - requestTimestamp) > 10000) {
     error(400, 'Server timestamp and request timestamp interval greater than 10 seconds. Please check that your NTP service is working properly.');
   }
   let signStr = context.koa.request.method + '\n' +
