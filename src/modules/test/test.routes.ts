@@ -1,10 +1,4 @@
-import {
-  sign,
-  index,
-  route,
-  internal,
-  notFound,
-} from './test.controller';
+import test from './test.controller';
 
 import { checkSignature } from '../../services/signature';
 import { Router } from '../../framework';
@@ -14,32 +8,32 @@ const testRouter: Router = new Router('');
 
 testRouter.new('/', {
   method: 'any',
-  handlers: [index]
+  handlers: [test.index]
 });
 
 testRouter.new('/', {
   method: 'any',
-  handlers: [index]
+  handlers: [test.index]
 });
 
 testRouter.new('/***', {
   method: 'any',
-  handlers: [notFound]
+  handlers: [test.notFound]
 });
 
 testRouter.new('/route', {
   method: 'any',
-  handlers: [route]
+  handlers: [test.route]
 });
 
 testRouter.new('/sign', {
   method: 'any',
-  handlers: [checkSignature, sign]
+  handlers: [checkSignature, test.sign]
 });
 
 const internalRoutes = new Router('/internal', {
   method: 'any',
-  handlers: [internal]
+  handlers: [test.internal]
 });
 
 internalRoutes.new('/***', {

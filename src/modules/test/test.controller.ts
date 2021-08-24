@@ -3,11 +3,11 @@ import {
 } from '../../framework';
 import { StatusCode, success, failed, response } from '../..';
 
-export const index = async (): Promise<void> => {
+const index = async (): Promise<void> => {
   success('hello world');
 };
 
-export const route = async (context: KoaContext): Promise<void> => {
+const route = async (context: KoaContext): Promise<void> => {
   response({
     app_id: context.app_id,
     test: 'test content',
@@ -15,14 +15,23 @@ export const route = async (context: KoaContext): Promise<void> => {
   }, StatusCode.success, 200);
 };
 
-export const internal = async (): Promise<void> => {
+const internal = async (): Promise<void> => {
   throw new Error('Internal Error');
 };
 
-export const notFound = async (): Promise<void> => {
+const notFound = async (): Promise<void> => {
   failed(404, StatusCode.notFound);
 };
 
-export const sign = async (): Promise<void> => {
+const sign = async (): Promise<void> => {
   response('check signature successfully', StatusCode.success, 200);
+};
+
+
+export default {
+  sign,
+  index,
+  route,
+  internal,
+  notFound,
 };
