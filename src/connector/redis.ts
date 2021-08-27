@@ -1,3 +1,4 @@
+// https://www.npmjs.com/package/redis
 import redis from 'redis';
 
 const clients: { [k: string]: redis.RedisClient } = {};
@@ -10,7 +11,7 @@ const getClient = (name: string): redis.RedisClient => {
 };
 
 export const initClient = (name: string, options?: redis.ClientOpts): void => {
-  clients[name] = redis.createClient(name, options);
+  clients[name] = redis.createClient(options);
 };
 
 export default getClient;
