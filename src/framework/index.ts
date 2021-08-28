@@ -76,7 +76,7 @@ export class Application extends Configuration {
     });
     koa.use(async (ctx: Koa.ParameterizedContext) => {
       // find router
-      const router = getRouteInfo(routes, ctx.url, ctx.method);
+      const router = getRouteInfo(routes, ctx.path, ctx.method);
       if (router) {
         return router;
       }
