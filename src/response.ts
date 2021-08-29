@@ -13,6 +13,7 @@ export enum StatusCode {
   success = '200;Success',
   notFound = '404;Not Found',
   error = '500;Internal Server Error',
+  badData = '400;Bad Data',
   invalidSignature = '400;Invalid Signature',
 
   // module code : 1
@@ -24,7 +25,7 @@ export const response = (data: unknown, code: StatusCode, status: number, header
   throw new HttpResponse(status, {
     code: c,
     message: m,
-    data: data,
+    data,
   }, headers ? headers : {});
 };
 
@@ -33,7 +34,7 @@ export const success = (data: unknown, headers?: Record<string, string>): never 
   throw new HttpResponse(200, {
     code: c,
     message: m,
-    data: data,
+    data,
   }, headers ? headers : {});
 };
 
@@ -46,7 +47,7 @@ export const failed = (status: number, code: StatusCode, headers?: Record<string
   }, headers ? headers : {});
 };
 
-export const error = (status: number, msg: string, headers?: Record<string, string>):never => {
+export const error = (status: number, msg: string, headers?: Record<string, string>): never => {
   throw new HttpResponse(status, {
     code: status,
     message: msg,
