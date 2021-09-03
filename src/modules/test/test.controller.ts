@@ -1,6 +1,7 @@
 import {
   KoaContext,
 } from '../../framework';
+import { TestModel } from './test.model';
 import { StatusCode, success, failed, response } from '../..';
 
 const index = async (): Promise<void> => {
@@ -27,6 +28,19 @@ const sign = async (): Promise<void> => {
   response('check signature successfully', StatusCode.success, 200);
 };
 
+const validate = async (context: KoaContext): Promise<void> => {
+  const model = new TestModel(context.koa.request.query);
+  const errors = model.validate({
+    test: 'required',
+    abc: 'required|integer|min:18',
+    email: 'required|email'
+  });
+  if (errors) {
+    response(errors.errors, StatusCode.badData, 400);
+  } else {
+    success(model);
+  }
+};
 
 export default {
   sign,
@@ -34,4 +48,5 @@ export default {
   route,
   internal,
   notFound,
+  validate
 };
