@@ -1,8 +1,10 @@
 export * from './routes';
 export * as events from './events';
 export * from './types';
+export * from './model';
 
 import Koa from 'koa';
+import KoaBodyParser from 'koa-bodyparser';
 import {
   v4 as uuidv4,
   v5 as uuidv5,
@@ -47,6 +49,7 @@ export class Application extends Configuration {
     const koa = new Koa(options);
     await listen(AppLifecycle.START, this);
     const workflow = new Workflow<KoaContext>(operator);
+    koa.use(KoaBodyParser());
     koa.use(async (ctx: Koa.ParameterizedContext, next) => {
       const context: KoaContext = {
         app: this,
@@ -65,7 +68,7 @@ export class Application extends Configuration {
       context.router = router;
       try {
         await workflow.start(context);
-      } catch (exContext) {
+      } catch (exContext: any) {
         if (exContext.curr.error instanceof HttpResponse) {
           await listen(AppLifecycle.RESPONSE, context);
         } else {

@@ -45,7 +45,7 @@ events.register(AppLifecycle.ERROR, async (context: KoaContext): Promise<void> =
     } else {
       await failed(500, StatusCode.error);
     }
-  } catch (err) {
+  } catch (err: any) {
     context.curr.error = err;
     await events.listen(AppLifecycle.RESPONSE, context);
   }
@@ -54,7 +54,7 @@ events.register(AppLifecycle.ERROR, async (context: KoaContext): Promise<void> =
 events.register(AppLifecycle.NOT_FOUND, async (context: KoaContext): Promise<void> => {
   try {
     await failed(404, StatusCode.notFound);
-  } catch (err) {
+  } catch (err: any) {
     context.curr.error = err;
     await events.listen(AppLifecycle.RESPONSE, context);
   }
