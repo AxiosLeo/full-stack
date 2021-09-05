@@ -4,16 +4,20 @@ import Validator, {
   ErrorMessages,
 } from 'validatorjs';
 
-abstract class Model {
-  // eslint-disable-next-line no-undef
-  [key: string]: any;
+export abstract class Model {
   constructor(obj?: { [key: string]: any }) {
     if(obj){
-      Object.keys(obj).forEach(key => {
-        this[key] = obj[key];
-      });
+      Object.assign(this, obj);
     }
   }
+
+  static create<T extends Model>(
+    c: new (obj?: { [key: string]: any }) => T,
+    obj?: { [key: string]: any }
+  ): T {
+    return new c(obj);
+  }
+
   toJson(): string {
     return JSON.stringify(this);
   }
