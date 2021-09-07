@@ -1,8 +1,7 @@
 import {
-  // Model,
   KoaContext,
 } from '../../framework';
-import { TestModel } from './test.model';
+import { TestModel } from '../../models';
 import { StatusCode, success, failed, response } from '../..';
 import { testRequestRules } from './test.rules';
 
@@ -32,7 +31,6 @@ const sign = async (): Promise<void> => {
 
 const validate = async (context: KoaContext): Promise<void> => {
   const model = new TestModel(context.koa.request.body);
-  console.log(context.koa.request.body);
   const errors = model.validate(testRequestRules);
   if (errors) {
     response(errors.errors, StatusCode.badData, 400);
