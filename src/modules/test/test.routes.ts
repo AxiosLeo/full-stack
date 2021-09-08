@@ -1,5 +1,4 @@
 import test from './test.controller';
-export * from './test.model';
 import { checkSignature } from '../../services/signature';
 import { Router } from '../../framework';
 import { failed, StatusCode } from '../..';
