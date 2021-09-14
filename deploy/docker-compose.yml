@@ -1,0 +1,20 @@
+version: "3"
+services:
+  web:
+    build: .
+    ports: :
+      - "3300:33300"
+    volumes:
+      - .:/workspace
+      - ./runtime/:/tmp/runtime/
+      - logvolume01:/var/log
+    links:
+      - redis
+    environment:
+      DEPLOY_ENV: development
+  redis:
+    image: redis
+  mysql:
+    image: mysql
+volumes:
+  logvolume01: {}

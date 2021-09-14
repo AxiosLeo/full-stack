@@ -16,7 +16,7 @@
     "url": "git+https://github.com/AxiosCros/node-tools.git"
   },
   "dependencies": {
-    "@axiosleo/cli-tool": "^1.3.2",
+    "@axiosleo/cli-tool": "^1.3.14",
     "cluster": "^0.7.7",
     "crypto": "^1.0.1",
     "koa": "^2.13.1",
@@ -55,20 +55,5 @@
     "nodemon": "^2.0.7",
     "nyc": "^15.1.0",
     "ts-node": "^10.1.0"
-  },
-  "nyc": {
-    "all": false,
-    "check-coverage": true,
-    "include": [
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      "tests/**/*.test.ts"
-    ],
-    "report-dir": "report/coverage",
-    "branches": 81,
-    "lines": 95,
-    "functions": 90,
-    "statements": 95
   }
 }
