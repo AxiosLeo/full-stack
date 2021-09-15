@@ -40,6 +40,8 @@ const controller = async (context: KoaContext): Promise<void> => {
     await helper.cmd._sync_foreach(handlers, async (handler) => {
       await handler(context);
     });
+  } else {
+    await listen(AppLifecycle.NOT_FOUND, context);
   }
 };
 

@@ -63,7 +63,7 @@ export class Application extends Configuration {
       };
       const router: Router | null = await next();
       if (!router) {
-        listen(AppLifecycle.NOT_FOUND, context);
+        await listen(AppLifecycle.NOT_FOUND, context);
       }
       context.router = router;
       try {
