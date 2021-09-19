@@ -1,7 +1,9 @@
 export * from './response';
 export * from './modules';
 
-import { printer } from '@axiosleo/cli-tool';
+import path from 'path';
+import ini from 'ini';
+import { printer, helper } from '@axiosleo/cli-tool';
 import { v4 as uuidv4 } from 'uuid';
 import process from 'process';
 import {
@@ -13,6 +15,7 @@ import {
   AppLifecycle,
 } from './framework';
 import { error, failed, StatusCode } from './response';
+import config from './config';
 
 events.register(AppLifecycle.START, async (app: Application) => {
   if (!app.app_id) {
@@ -67,6 +70,14 @@ events.register(AppLifecycle.DONE, async (context: KoaContext): Promise<void> =>
 });
 
 export const start = async (port: number, debug = false): Promise<void> => {
+  // prod | test | dev ....
+  const env = process.env.NODE_ENV || 'local';
+  const file = env !== 'local' ? `.env.${env}` : '.env';
+  const filepath = path.join(__dirname, '../' + file);
+  if (await helper.fs._exists(filepath)) {
+    const obj = ini.decode(await helper.fs._read(filepath));
+    config.assign(JSON.parse(JSON.stringify(obj)));
+  }
   const app = new Application({
     debug,
     port,

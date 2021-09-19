@@ -1,4 +1,6 @@
-import { Configuration } from '@axiosleo/cli-tool';
+import {
+  Configuration,
+} from '@axiosleo/cli-tool';
 
 const config = new Configuration({
   db: {
