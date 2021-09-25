@@ -16,6 +16,7 @@ import {
 } from './framework';
 import { error, failed, StatusCode } from './response';
 import config from './config';
+import { mysqldb } from './connector';
 
 events.register(AppLifecycle.START, async (app: Application) => {
   if (!app.app_id) {
@@ -78,6 +79,9 @@ export const start = async (port: number, debug = false): Promise<void> => {
     const obj = ini.decode(await helper.fs._read(filepath));
     config.assign(JSON.parse(JSON.stringify(obj)));
   }
+  // initialize connectors
+  const dbconfig = config.get('db');
+  mysqldb.default.initialize(dbconfig);
   const app = new Application({
     debug,
     port,
