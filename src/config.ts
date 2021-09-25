@@ -5,10 +5,12 @@ import {
 const config = new Configuration({
   db: {
     // mysql: {
-    //   username: 'root',
+    //   type: 'mysql',
+    //   user: 'root',
     //   password: 'root',
     //   port: 3306,
-    //   host: 'localhost'
+    //   host: 'localhost',
+    //   database: 'ts_study',
     // },
   }
 });
