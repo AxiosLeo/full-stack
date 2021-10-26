@@ -3,7 +3,7 @@ import {
 } from '../framework';
 
 import { error } from '../response';
-import crypto from 'crypto';
+import CryptoJS = require('crypto-js');
 
 const signHeaders = [
   'content-length',
@@ -17,16 +17,12 @@ const signHeaders = [
   'x-timestamp'
 ];
 
-const signatureMethods: Record<string, (str: string, secret: string) => Promise<Buffer>> = {
-  hmacsha1: async (str: string, secret: string): Promise<Buffer> => {
-    const obj = crypto.createHmac('sha1',secret);
-    obj.update(str);
-    return obj.digest();
+const signatureMethods: Record<string, (str: string, secret: string) => Promise<CryptoJS.lib.WordArray>> = {
+  hmacsha1: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => {
+    return CryptoJS.HmacSHA1(str, secret);
   },
-  hmansha256: async (str: string, secret: string): Promise<Buffer> => {
-    const obj = crypto.createHmac('sha256', secret);
-    obj.update(str);
-    return obj.digest();
+  hmansha256: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => {
+    return CryptoJS.HmacSHA256(str, secret);
   }
 };
 
