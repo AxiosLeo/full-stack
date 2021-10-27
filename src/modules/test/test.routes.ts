@@ -1,5 +1,5 @@
 import test from './test.controller';
-import { checkSignature } from '../../services/signature';
+import { checkSignature } from '../../handlers/signature';
 import { Router } from '../../framework';
 import { failed, StatusCode } from '../..';
 
