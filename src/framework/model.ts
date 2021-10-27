@@ -5,9 +5,12 @@ import Validator, {
 } from 'validatorjs';
 
 export abstract class Model {
-  constructor(obj?: { [key: string]: any }) {
+  constructor(obj?: { [key: string]: any }, rules?: Rules, msg?: ErrorMessages) {
     if(obj){
       Object.assign(this, obj);
+    }
+    if(rules){
+      this.validate(rules, msg);
     }
   }
 
