@@ -1,5 +1,6 @@
-import Koa from 'koa';
 import CryptoJS = require('crypto-js');
+import { IncomingHttpHeaders } from 'http';
+import { ParsedUrlQuery } from 'querystring';
 
 const signHeaders = [
   'content-length',
@@ -20,7 +21,7 @@ export const signatureMethods: Record<string, (str: string, secret: string) => P
   hmacsha256: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => {
     return CryptoJS.HmacSHA256(str, secret);
   },
-  hmacsha512: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => { 
+  hmacsha512: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => {
     return CryptoJS.HmacSHA512(str, secret);
   }
 };
@@ -29,12 +30,12 @@ export const supportedSignatureMethods = async (signatureMethod: string) => {
   return signatureMethods[signatureMethod] ? true : false;
 };
 
-export const makeSignatureString = async (request: Koa.Request) => {
-  const headers = request.headers;
-  const method = request.method;
-  const pathinfo = request.path;
-  const query = request.query;
-
+export const generateSignatureStr = async (
+  method: string,
+  pathinfo: string,
+  headers: IncomingHttpHeaders,
+  query: ParsedUrlQuery
+): Promise<string> => {
   let signStr = method + '\n' +
     pathinfo + '\n' +
     signHeaders.map((str: string) => {

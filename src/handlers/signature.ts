@@ -5,7 +5,7 @@ import {
 import { error } from '../response';
 import {
   makeSignature,
-  makeSignatureString,
+  generateSignatureStr,
   supportedSignatureMethods,
   signatureMethods
 } from '../services/signature';
@@ -25,7 +25,12 @@ export const checkSignature = async (context: KoaContext): Promise<void> => {
   }
 
   if (await supportedSignatureMethods(signatureMethod)) {
-    const signStr = await makeSignatureString(context.koa.request);
+    const signStr = await generateSignatureStr(
+      context.koa.request.method,
+      context.koa.request.path,
+      context.koa.request.headers,
+      context.koa.request.query,
+    );
     const requestSignature = context.koa.request.headers['x-signature'];
     if (!requestSignature) {
       error(400, 'Lost X-Signature header');
