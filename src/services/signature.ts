@@ -19,6 +19,9 @@ export const signatureMethods: Record<string, (str: string, secret: string) => P
   },
   hmacsha256: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => {
     return CryptoJS.HmacSHA256(str, secret);
+  },
+  hmacsha512: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => { 
+    return CryptoJS.HmacSHA512(str, secret);
   }
 };
 
