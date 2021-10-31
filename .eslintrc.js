@@ -1,4 +1,6 @@
-{
+'use strict';
+
+module.exports = {
   "env": {
     "browser": true,
     "es6": true,
@@ -10,7 +12,8 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "tsconfig.json",
-    "sourceType": "module"
+    "sourceType": "module",
+    "tsconfigRootDir": __dirname
   },
   "plugins": [
     "@typescript-eslint"
@@ -92,7 +95,8 @@
       ],
       "rules": {
         "max-lines-per-function": "off"
-      }
+      },
+      tsconfigRootDir: __dirname,
     }
   ],
   "globals": {
