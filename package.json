@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint --fix src/*",
     "build": "tsc -p tsconfig.json",
-    "dev": "./node_modules/nodemon/bin/nodemon.js",
+    "dev": "APP_DEBUG=dev ./node_modules/nodemon/bin/nodemon.js",
     "test": "mocha -r ts-node/register tests/**/*.test.ts --parallel",
     "test-cov": "nyc mocha -r ts-node/register tests/**/*.test.ts --parallel"
   },

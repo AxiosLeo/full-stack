@@ -6,13 +6,13 @@ import { start } from './src';
 
 const numCPUs = cpus().length;
 const port = 3300;
-const debug = process.env.DEBUG ? true : false;
+const debug = process.env.APP_DEBUG ? true : false;
 const process_count = 1;
 
 if (cluster.isMaster) {
   printer.yellow(`current CPU number: ${numCPUs}`).println().println();
-  printer.green('start on ')
-    .println(`http://localhost:${port}`);
+  printer.green(`start on ${debug ? 'debug mode ' : ''}`)
+    .println(`http://localhost:${port} `);
   for (let i = 0; i < process_count; i++) {
     cluster.fork();
   }
