@@ -48,6 +48,7 @@ export const failed = (status: number, code: StatusCode, headers?: Record<string
 };
 
 export const error = (status: number, msg: string, headers?: Record<string, string>): never => {
+  console.error(new Error(`${status}: ${msg}`));
   throw new HttpResponse(status, {
     code: status,
     message: msg,

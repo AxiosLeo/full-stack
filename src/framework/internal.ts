@@ -1,6 +1,7 @@
 
 import {
   RouterInfo,
+  ContextHandler,
 } from './types';
 
 import { Router } from './routes';
@@ -65,17 +66,28 @@ export const resolveRouters = (routes: Router[]): void => {
   return routers;
 };
 
+const getRouter = (item: any): RouterItem | null => {
+  let route: RouterItem | null = null;
+  if (item && item['__route___']) {
+    route = item['__route___'] as RouterItem;
+  } else if (item && item[''] && item['']['__route___']) {
+    route = item['']['__route___'] as RouterItem;
+  }
+  return route;
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getRouteInfo = (routers: any, pathinfo: string, method: string): RouterInfo | null => {
   const trace = resolvePathinfo(pathinfo);
   let curr = routers;
   let step = 0;
   const params: string[] = [];
+  let middleware: ContextHandler[] = [];
   while (step < trace.length) {
     const tag = trace[step];
     step++;
     if (tag === '@') {
-      if(!curr[tag]){
+      if (!curr[tag]) {
         curr = null;
         break;
       }
@@ -97,20 +109,20 @@ export const getRouteInfo = (routers: any, pathinfo: string, method: string): Ro
       curr = null;
       break;
     }
+    let currRoute = getRouter(curr);
+    if (currRoute && currRoute.router && currRoute.router.middleware && currRoute.router.middleware.length) {
+      middleware = middleware.concat(currRoute.router.middleware);
+    }
   }
-  let route: RouterItem | null = null;
-  if (curr && curr['__route___']) {
-    route = curr['__route___'] as RouterItem;
-  } else if (curr && curr[''] && curr['']['__route___']) {
-    route = curr['']['__route___'] as RouterItem;
-  }
+  let route: RouterItem | null = getRouter(curr);
   if (route) {
     const methods = route.router.method.toUpperCase().split('|');
     if (methods.indexOf('ANY') > -1 || methods.indexOf(method) > -1) {
       const routeInfo: RouterInfo = {
         pathinfo,
         params: {},
-        handlers: route.router.handlers ? route.router.handlers : []
+        handlers: route.router.handlers ? route.router.handlers : [],
+        middleware,
       };
       if (route.params && route.params.length) {
         route.params.forEach((item: string, index: number) => {

@@ -19,6 +19,11 @@ const middleware = async (context: KoaContext): Promise<void> => {
   await listen(AppLifecycle.MIDDLEWARE, context);
 
   // exec middleware by routes configuration
+  if(context.router && context.router.middleware && context.router.middleware.length > 0) {
+    await helper.cmd._sync_foreach(context.router.middleware, async (middleware) => {
+      await middleware(context);
+    });
+  }
 };
 
 /**

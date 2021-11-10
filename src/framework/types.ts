@@ -30,6 +30,7 @@ export type ContextHandler = (context: KoaContext) => Promise<void>;
 export interface RouterInfo {
   pathinfo: string;
   handlers: ContextHandler[];
+  middleware: ContextHandler[];
   params: {
     [key: string]: string;
   };
@@ -38,6 +39,7 @@ export interface RouterInfo {
 export interface RouterOptions {
   method?: string,
   handlers?: ContextHandler[],
+  middleware?: ContextHandler[],
   intro?: string,
   routers?: Router[],
 }

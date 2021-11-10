@@ -20,6 +20,9 @@
   "include": [
     "index.ts",
     "src/**/*",
-    "tests/**/*"
+    "modules/**/*",
+    "tests/**/*",
+    "bin/**/*",
+    "commands/**/*"
   ]
 }

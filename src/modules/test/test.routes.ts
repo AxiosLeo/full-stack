@@ -1,5 +1,5 @@
 import test from './test.controller';
-import { checkSignature } from '../../handlers/signature';
+import * as middlewares from '../../middleware';
 import { Router } from '../../framework';
 import { failed, StatusCode } from '../..';
 
@@ -27,7 +27,8 @@ testRouter.new('/route', {
 
 testRouter.new('/sign', {
   method: 'any',
-  handlers: [checkSignature, test.sign]
+  handlers: [test.sign],
+  middleware: [middlewares.checkSignature]
 });
 
 testRouter.new('/validate', {
