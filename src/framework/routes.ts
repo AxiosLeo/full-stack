@@ -8,7 +8,7 @@ export class Router {
   method = '';
   routers: Router[] = [];
   handlers?: ContextHandler[];
-  middleware?: ContextHandler[];
+  middlewares?: ContextHandler[];
   options?: RouterOptions;
 
   constructor(prefix: string = '', options?: RouterOptions) {
@@ -17,7 +17,7 @@ export class Router {
       this.method = options.method ? options.method : '';
       this.handlers = options.handlers ? options.handlers : [];
       this.routers = options.routers ? options.routers : [];
-      this.middleware = options.middlewares ? options.middlewares : [];
+      this.middlewares = options.middlewares ? options.middlewares : [];
     }
   }
 

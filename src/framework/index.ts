@@ -12,7 +12,7 @@ import {
 } from 'uuid';
 import { Workflow, Configuration } from '@axiosleo/cli-tool';
 import * as operator from './app';
-import { KoaContext, AppLifecycle, AppConfiguration, ContextHandler } from './types';
+import { KoaContext, AppLifecycle, AppConfiguration } from './types';
 import { resolveRouters, getRouteInfo } from './internal';
 import { listen } from './events';
 import { Router } from './routes';
@@ -45,8 +45,6 @@ export class HttpError extends Error {
 export class Application extends Configuration {
   app_id: string;
   events: unknown[] = [];
-  middleware: ContextHandler[] = [];
-  validator: ContextHandler[] = [];
   routes: Router[] = [];
   constructor(config: AppConfiguration) {
     super(config);

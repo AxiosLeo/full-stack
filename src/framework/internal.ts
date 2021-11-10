@@ -29,8 +29,8 @@ const resolvePathinfo = (pathinfo: string): string[] => {
 export const resolveRouters = (routes: Router[]): void => {
   const routers: any = {};
   const recur = (prefix: string, router: Router, middlewares: ContextHandler[]) => {
-    let middlewaresClone = router.middleware && router.middleware.length > 0 ?
-      middlewares.concat(router.middleware) : middlewares.concat();
+    let middlewaresClone = router.middlewares && router.middlewares.length > 0 ?
+      middlewares.concat(router.middlewares) : middlewares.concat();
     prefix = prefix + router.prefix;
     if (router.routers && router.routers.length) {
       router.routers.forEach((item: Router) => {
