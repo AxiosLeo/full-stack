@@ -35,29 +35,27 @@ export const resolveRouters = (routes: Router[]): void => {
           recur(prefix, item);
         });
       }
-      if (router.handlers && router.handlers.length) {
-        const trace = resolvePathinfo(prefix);
-        const params: string[] = [];
-        let curr: any = routers;
-        trace.forEach((t: string): void => {
-          let key: string;
-          if (t.indexOf('{:') === 0) {
-            key = '*';
-            params.push(t.substr(2, t.length - 3));
-          } else {
-            key = t;
-          }
-          if (!curr[key]) {
-            curr[key] = {};
-          }
-          curr = curr[key];
-        });
-        curr['__route___'] = {
-          prefix,
-          params,
-          router
-        };
-      }
+      const trace = resolvePathinfo(prefix);
+      const params: string[] = [];
+      let curr: any = routers;
+      trace.forEach((t: string): void => {
+        let key: string;
+        if (t.indexOf('{:') === 0) {
+          key = '*';
+          params.push(t.substr(2, t.length - 3));
+        } else {
+          key = t;
+        }
+        if (!curr[key]) {
+          curr[key] = {};
+        }
+        curr = curr[key];
+      });
+      curr['__route___'] = {
+        prefix,
+        params,
+        router
+      };
     };
     routes.forEach(item => recur('', item));
   } else {
@@ -92,9 +90,7 @@ export const getRouteInfo = (routers: any, pathinfo: string, method: string): Ro
         break;
       }
       curr = curr[tag];
-      continue;
-    }
-    if (curr[tag]) {
+    } else if (curr[tag]) {
       // has key
       curr = curr[tag];
     } else if (curr['*']) {
