@@ -26,6 +26,7 @@
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.0.0",
+    "mongodb": "^4.1.4",
     "mysql": "^2.18.1",
     "mysql-client": "^0.3.0",
     "parse-url-parts": "^2.0.3",

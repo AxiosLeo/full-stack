@@ -3,7 +3,7 @@ export * from './modules';
 
 import path from 'path';
 import ini from 'ini';
-import { printer, helper } from '@axiosleo/cli-tool';
+import { printer, helper, debug } from '@axiosleo/cli-tool';
 import { v4 as uuidv4 } from 'uuid';
 import process from 'process';
 import {
@@ -17,7 +17,7 @@ import {
 } from './framework';
 import { error, failed, StatusCode } from './response';
 import config from './config';
-import { mysqldb } from './connector';
+import { initialize } from './db';
 
 events.register(AppLifecycle.START, async (app: Application) => {
   if (!app.app_id) {
@@ -44,9 +44,11 @@ events.register(AppLifecycle.RESPONSE, async (context: KoaContext) => {
 
 events.register(AppLifecycle.ERROR, async (context: KoaContext): Promise<void> => {
   try {
-    console.error(context.curr.error);
-    if (context.curr.error instanceof HttpError) {
-      await error(context.curr.error.status, context.curr.error.message, context.curr.error.headers);
+    const errorIns = context.curr.error;
+    if (errorIns instanceof HttpError) {
+      await error(errorIns.status, errorIns.message, errorIns.headers);
+    } else if (errorIns instanceof HttpResponse) {
+      await events.listen(AppLifecycle.RESPONSE, context);
     } else if (context.app.debug) {
       await error(500, context.curr.error ? context.curr.error.message : 'Internal Server Error');
     } else {
@@ -69,11 +71,11 @@ events.register(AppLifecycle.NOT_FOUND, async (context: KoaContext): Promise<voi
 
 events.register(AppLifecycle.DONE, async (context: KoaContext): Promise<void> => {
   if (context.app.debug && context.curr.error instanceof HttpResponse) {
-    console.log(JSON.stringify(context.curr.error.data));
+    debug.dump(JSON.stringify(context.curr.error.data));
   }
 });
 
-export const start = async (port: number, debug = false): Promise<void> => {
+export const start = async (port: number, appDebug = false): Promise<void> => {
   // prod | test | dev ....
   const env = process.env.NODE_ENV || 'local';
   const file = env !== 'local' ? `.env.${env}` : '.env';
@@ -83,12 +85,20 @@ export const start = async (port: number, debug = false): Promise<void> => {
     config.assign(JSON.parse(JSON.stringify(obj)));
   }
   // initialize connectors
-  const dbconfig = config.get('db');
-  mysqldb.default.initialize(dbconfig);
-  const app = new Application({
-    debug,
-    port,
-    app_id: '',
-  });
-  app.start(routers);
+  const dbconfigs = config.get('db', {});
+  try {
+    initialize(dbconfigs);
+    const app = new Application({
+      debug: appDebug,
+      port,
+      app_id: '',
+    });
+    await app.start(routers, {
+      static: {
+        rootDir: path.join(__dirname, '../../views/dist'),
+      }
+    });
+  } catch (err: any) {
+    debug.dump(err);
+  }
 };

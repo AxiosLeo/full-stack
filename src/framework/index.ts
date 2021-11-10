@@ -54,7 +54,7 @@ export class Application extends Configuration {
     }
   }
 
-  async start(routers?: Router[], options?: Record<string, string>): Promise<void> {
+  async start(routers?: Router[], options?: Record<string, any>): Promise<void> {
     const routes = resolveRouters(routers ? routers : []);
     const koa = new Koa(options);
     await listen(AppLifecycle.START, this);
