@@ -4,6 +4,9 @@
   "description": "Project for study Typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "cli": "dist/src/bin/cli.js"
+  },
   "scripts": {
     "lint": "eslint --fix src/*",
     "build": "tsc -p tsconfig.json",
