@@ -10,7 +10,7 @@ export class Router {
   handlers?: ContextHandler[];
   options?: RouterOptions;
 
-  constructor(prefix: string, options?: RouterOptions) {
+  constructor(prefix: string = '', options?: RouterOptions) {
     this.prefix = prefix;
     if (options) {
       this.method = options.method ? options.method : '';

@@ -3,7 +3,7 @@ import { checkSignature } from '../../handlers/signature';
 import { Router } from '../../framework';
 import { failed, StatusCode } from '../..';
 
-const testRouter: Router = new Router('');
+const testRouter: Router = new Router();
 
 testRouter.new('/', {
   method: 'any',
