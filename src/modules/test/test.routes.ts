@@ -28,7 +28,7 @@ testRouter.new('/route', {
 testRouter.new('/sign', {
   method: 'any',
   handlers: [test.sign],
-  middleware: [middlewares.checkSignature]
+  middlewares: [middlewares.checkSignature]
 });
 
 testRouter.new('/validate', {

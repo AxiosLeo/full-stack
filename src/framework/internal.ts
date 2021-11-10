@@ -10,6 +10,7 @@ interface RouterItem {
   prefix: string;
   params: string[];
   router: Router;
+  middlewares: ContextHandler[];
 }
 
 const resolvePathinfo = (pathinfo: string): string[] => {
@@ -27,40 +28,39 @@ const resolvePathinfo = (pathinfo: string): string[] => {
 
 export const resolveRouters = (routes: Router[]): void => {
   const routers: any = {};
-  if (!routers['@']) {
-    const recur = (prefix: string, router: Router) => {
-      prefix = prefix + router.prefix;
-      if (router.routers && router.routers.length) {
-        router.routers.forEach((item: Router) => {
-          recur(prefix, item);
-        });
-      }
-      const trace = resolvePathinfo(prefix);
-      const params: string[] = [];
-      let curr: any = routers;
-      trace.forEach((t: string): void => {
-        let key: string;
-        if (t.indexOf('{:') === 0) {
-          key = '*';
-          params.push(t.substr(2, t.length - 3));
-        } else {
-          key = t;
-        }
-        if (!curr[key]) {
-          curr[key] = {};
-        }
-        curr = curr[key];
+  const recur = (prefix: string, router: Router, middlewares: ContextHandler[]) => {
+    let middlewaresClone = router.middleware && router.middleware.length > 0 ?
+      middlewares.concat(router.middleware) : middlewares.concat();
+    prefix = prefix + router.prefix;
+    if (router.routers && router.routers.length) {
+      router.routers.forEach((item: Router) => {
+        recur(prefix, item, middlewaresClone);
       });
-      curr['__route___'] = {
-        prefix,
-        params,
-        router
-      };
-    };
-    routes.forEach(item => recur('', item));
-  } else {
-    throw new Error('Only exec on app start');
-  }
+    }
+    const trace = resolvePathinfo(prefix);
+    const params: string[] = [];
+    let curr: any = routers;
+    trace.forEach((t: string): void => {
+      let key: string;
+      if (t.indexOf('{:') === 0) {
+        key = '*';
+        params.push(t.substr(2, t.length - 3));
+      } else {
+        key = t;
+      }
+      if (!curr[key]) {
+        curr[key] = {};
+      }
+      curr = curr[key];
+    });
+    curr['__route___'] = {
+      prefix,
+      params,
+      router,
+      middlewares: middlewaresClone,
+    } as RouterItem;
+  };
+  routes.forEach(item => recur('', item, []));
   return routers;
 };
 
@@ -80,7 +80,6 @@ export const getRouteInfo = (routers: any, pathinfo: string, method: string): Ro
   let curr = routers;
   let step = 0;
   const params: string[] = [];
-  let middleware: ContextHandler[] = [];
   while (step < trace.length) {
     const tag = trace[step];
     step++;
@@ -105,10 +104,6 @@ export const getRouteInfo = (routers: any, pathinfo: string, method: string): Ro
       curr = null;
       break;
     }
-    let currRoute = getRouter(curr);
-    if (currRoute && currRoute.router && currRoute.router.middleware && currRoute.router.middleware.length) {
-      middleware = middleware.concat(currRoute.router.middleware);
-    }
   }
   let route: RouterItem | null = getRouter(curr);
   if (route) {
@@ -118,7 +113,7 @@ export const getRouteInfo = (routers: any, pathinfo: string, method: string): Ro
         pathinfo,
         params: {},
         handlers: route.router.handlers ? route.router.handlers : [],
-        middleware,
+        middlewares: route.middlewares,
       };
       if (route.params && route.params.length) {
         route.params.forEach((item: string, index: number) => {

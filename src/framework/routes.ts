@@ -17,7 +17,7 @@ export class Router {
       this.method = options.method ? options.method : '';
       this.handlers = options.handlers ? options.handlers : [];
       this.routers = options.routers ? options.routers : [];
-      this.middleware = options.middleware ? options.middleware : [];
+      this.middleware = options.middlewares ? options.middlewares : [];
     }
   }
 
