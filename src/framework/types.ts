@@ -17,19 +17,6 @@ export const AppLifecycle = {
   DONE: 'done',
 };
 
-export class HttpResponse extends Error {
-  status: number
-  data: Record<string, unknown> = {}
-  headers: Record<string, string>
-  format = 'json'
-  constructor(httpStatus: number, data: Record<string, unknown>, headers: Record<string, string> = {}) {
-    super();
-    this.headers = headers;
-    this.status = httpStatus;
-    this.data = data;
-  }
-}
-
 export interface KoaContext extends Context {
   app: Application,
   koa: Koa.ParameterizedContext,

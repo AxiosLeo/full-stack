@@ -9,6 +9,7 @@ import process from 'process';
 import {
   events,
   routers,
+  HttpError,
   KoaContext,
   Application,
   HttpResponse,
@@ -44,7 +45,9 @@ events.register(AppLifecycle.RESPONSE, async (context: KoaContext) => {
 events.register(AppLifecycle.ERROR, async (context: KoaContext): Promise<void> => {
   try {
     console.error(context.curr.error);
-    if (context.app.debug) {
+    if (context.curr.error instanceof HttpError) {
+      await error(context.curr.error.status, context.curr.error.message, context.curr.error.headers);
+    } else if (context.app.debug) {
       await error(500, context.curr.error ? context.curr.error.message : 'Internal Server Error');
     } else {
       await failed(500, StatusCode.error);

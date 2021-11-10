@@ -30,6 +30,18 @@ export class HttpResponse extends Error {
   }
 }
 
+export class HttpError extends Error {
+  status: number;
+  message: string;
+  headers: Record<string, string>;
+  constructor(httpStatus: number, message: string, headers: Record<string, string> = {}) {
+    super();
+    this.status = httpStatus;
+    this.message = message;
+    this.headers = headers;
+  }
+}
+
 export class Application extends Configuration {
   app_id: string;
   events: unknown[] = [];
