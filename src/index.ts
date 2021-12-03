@@ -17,7 +17,6 @@ import {
 } from './framework';
 import { error, failed, StatusCode } from './response';
 import config from './config';
-import { initialize } from './db';
 
 events.register(AppLifecycle.START, async (app: Application) => {
   if (!app.app_id) {
@@ -84,10 +83,7 @@ export const start = async (port: number, appDebug = false): Promise<void> => {
     const obj = ini.decode(await helper.fs._read(filepath));
     config.assign(JSON.parse(JSON.stringify(obj)));
   }
-  // initialize connectors
-  const dbconfigs = config.get('db', {});
   try {
-    initialize(dbconfigs);
     const app = new Application({
       debug: appDebug,
       port,

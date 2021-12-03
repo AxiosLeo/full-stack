@@ -4,13 +4,13 @@
     "preserveConstEnums": true,
     "module": "commonjs",
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "es2020",
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strict": true,
     "moduleResolution": "node",
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "dist",
     "allowJs": true,
     "checkJs": true,
@@ -18,11 +18,10 @@
     "skipLibCheck": true
   },
   "include": [
-    "index.ts",
-    "src/**/*",
-    "modules/**/*",
-    "tests/**/*",
-    "bin/**/*",
-    "commands/**/*"
-  ]
+    "src/**/*"
+  ],
+  "ts-node": {
+    "transpileOnly": true,
+    "transpiler": "@swc-node/register"
+  }
 }

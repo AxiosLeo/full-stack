@@ -9,7 +9,6 @@ const app = new App({
   commands_sort: ['help']
 });
 
-console.log(commands);
 Object.values(commands).forEach((item) => {
   app.register(item);
 });

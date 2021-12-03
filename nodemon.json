@@ -4,11 +4,10 @@
     "**/__tests__/*"
   ],
   "watch": [
-    "src",
-    "index.ts"
+    "src"
   ],
   "exec": [
-    "node -r ts-node/register index.ts"
+    "node -r @swc-node/register src/bootstrap.ts"
   ],
   "ext": "ts"
 }

@@ -2,7 +2,7 @@
 import cluster from 'cluster';
 import { cpus } from 'os';
 import { printer } from '@axiosleo/cli-tool';
-import { start } from './src';
+import { start } from './';
 
 const numCPUs = cpus().length;
 const port = 3300;
