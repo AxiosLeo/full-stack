@@ -29,7 +29,7 @@ const resolvePathinfo = (pathinfo: string): string[] => {
 export const resolveRouters = (routes: Router[]): void => {
   const routers: any = {};
   const recur = (prefix: string, router: Router, middlewares: ContextHandler[]) => {
-    let middlewaresClone = router.middlewares && router.middlewares.length > 0 ?
+    const middlewaresClone = router.middlewares && router.middlewares.length > 0 ?
       middlewares.concat(router.middlewares) : middlewares.concat();
     prefix = prefix + router.prefix;
     if (router.routers && router.routers.length) {
@@ -72,7 +72,7 @@ const getRouter = (item: any): RouterItem | null => {
     route = item['']['__route___'] as RouterItem;
   }
   return route;
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getRouteInfo = (routers: any, pathinfo: string, method: string): RouterInfo | null => {
@@ -105,7 +105,7 @@ export const getRouteInfo = (routers: any, pathinfo: string, method: string): Ro
       break;
     }
   }
-  let route: RouterItem | null = getRouter(curr);
+  const route: RouterItem | null = getRouter(curr);
   if (route) {
     const methods = route.router.method.toUpperCase().split('|');
     if (methods.indexOf('ANY') > -1 || methods.indexOf(method) > -1) {

@@ -18,10 +18,10 @@ import { listen } from './events';
 import { Router } from './routes';
 
 export class HttpResponse extends Error {
-  status: number
-  data: Record<string, unknown> = {}
-  headers: Record<string, string>
-  format = 'json'
+  status: number;
+  data: Record<string, unknown> = {};
+  headers: Record<string, string>;
+  format = 'json';
   constructor(httpStatus: number, data: Record<string, unknown>, headers: Record<string, string> = {}) {
     super();
     this.headers = headers;

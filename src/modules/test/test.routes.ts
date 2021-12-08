@@ -1,7 +1,7 @@
 import test from './test.controller';
 import * as middlewares from '../../middleware';
 import { Router } from '../../framework';
-import { failed, StatusCode } from '../..';
+import { failed, StatusCode } from '../../index';
 
 const testRouter: Router = new Router();
 

@@ -8,12 +8,12 @@ import { HttpError } from './';
  * validator documentation
  * @link https://github.com/mikeerickson/validatorjs
  */
-export abstract class Model {
+export class Model {
   constructor(obj?: { [key: string]: any }, rules?: Rules, msg?: ErrorMessages) {
-    if(obj){
+    if (obj) {
       Object.assign(this, obj);
     }
-    if(rules){
+    if (rules) {
       const validation = this.validate(rules, msg);
       if (validation.fails()) {
         const errors = validation.errors.all();
@@ -24,10 +24,11 @@ export abstract class Model {
   }
 
   static create<T extends Model>(
-    c: new (obj?: { [key: string]: any }) => T,
-    obj?: { [key: string]: any }
+    obj?: { [key: string]: any },
+    rules?: Rules,
+    msg?: ErrorMessages
   ): T {
-    return new c(obj);
+    return new Model(obj, rules, msg) as T;
   }
 
   toJson(): string {

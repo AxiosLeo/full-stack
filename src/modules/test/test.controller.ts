@@ -1,7 +1,8 @@
 import {
   KoaContext,
+  Model
 } from '../../framework';
-import { TestModel } from '../../models';
+import { Test } from '../../models';
 import { StatusCode, success, failed, response } from '../..';
 
 const index = async (): Promise<void> => {
@@ -29,7 +30,11 @@ const sign = async (): Promise<void> => {
 };
 
 const validate = async (context: KoaContext): Promise<void> => {
-  const model = new TestModel(context.koa.request.query);
+  const model = Model.create<Test>(context.koa.request.query, {
+    test: 'required',
+    abc: 'required|integer|min:18',
+    email: 'required|email'
+  });
   success(model);
 };
 

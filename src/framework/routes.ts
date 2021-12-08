@@ -11,7 +11,7 @@ export class Router {
   middlewares?: ContextHandler[];
   options?: RouterOptions;
 
-  constructor(prefix: string = '', options?: RouterOptions) {
+  constructor(prefix = '', options?: RouterOptions) {
     this.prefix = prefix;
     if (options) {
       this.method = options.method ? options.method : '';
