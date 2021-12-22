@@ -15,9 +15,6 @@ const signHeaders = [
 ];
 
 export const signatureMethods: Record<string, (str: string, secret: string) => Promise<CryptoJS.lib.WordArray>> = {
-  hmacsha1: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => {
-    return CryptoJS.HmacSHA1(str, secret);
-  },
   hmacsha256: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => {
     return CryptoJS.HmacSHA256(str, secret);
   },
