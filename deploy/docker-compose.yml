@@ -1,20 +1,48 @@
-version: "3"
+version: '3'
 services:
-  web:
-    build: .
-    ports: :
-      - "3300:33300"
-    volumes:
-      - .:/workspace
-      - ./runtime/:/tmp/runtime/
-      - logvolume01:/var/log
-    links:
-      - redis
-    environment:
-      DEPLOY_ENV: development
+  mysql:
+    image: 'mysql:5.7'
+    platform: linux/x86_64
+    container_name: "mysql"
+    command: 
+      - "--default-authentication-plugin=mysql_native_password"
+    environment: 
+      MYSQL_ROOT_PASSWORD: 'LUj&U@>WQ7azYpB'
+      MYSQL_USER: 'test'
+      MYSQL_PASS: 'test'
+    restart: 'always'
+    volumes: 
+      - "./volume/data/mysql:/var/lib/mysql"
+    ports: 
+      - "3306:3306"
   redis:
     image: redis
-  mysql:
-    image: mysql
-volumes:
-  logvolume01: {}
+    container_name: "redis"
+    restart: 'always'
+    volumes: 
+      - "./volume/data/redis:/data"
+      - "./volume/logs/redis:/logs"
+    ports:
+      - "6379:6379"
+  mongo:
+    image: "mongo"
+    container_name: "mongo"
+    environment:
+      MONGO_INITDB_DATABASE: "ng-one"
+    volumes:
+      - "./volume/data/mongo:/data/db"
+    ports:
+      - "27017:27017"
+  rabbit:
+    image: rabbitmq
+    hostname: rabbit
+    container_name: "rabbitmq"
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=HT3nt(vavXm!GKUGb
+    volumes:
+      - ./volume/data/rabbitmq:/var/lib/rabbitmq
