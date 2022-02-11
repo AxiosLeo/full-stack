@@ -26,7 +26,7 @@ const resolvePathinfo = (pathinfo: string): string[] => {
   return trace;
 };
 
-export const resolveRouters = (routes: Router[]): void => {
+export const resolveRouters = (routes: Router[]): any => {
   const routers: any = {};
   const recur = (prefix: string, router: Router, middlewares: ContextHandler[]) => {
     const middlewaresClone = router.middlewares && router.middlewares.length > 0 ?
@@ -40,36 +40,51 @@ export const resolveRouters = (routes: Router[]): void => {
     const trace = resolvePathinfo(prefix);
     const params: string[] = [];
     let curr: any = routers;
-    trace.forEach((t: string): void => {
-      let key: string;
-      if (t.indexOf('{:') === 0) {
-        key = '*';
-        params.push(t.substr(2, t.length - 3));
+    let key = '';
+    if (trace.length > 1) {
+      trace.forEach((t: string): void => {
+        if (t.indexOf('{:') === 0) {
+          key = '*';
+          params.push(t.substring(2, t.length - 3));
+        } else {
+          key = t;
+        }
+        if (!curr[key]) {
+          curr[key] = {};
+        }
+        curr = curr[key];
+      });
+      if (!curr['__route___']) {
+        curr['__route___'] = [
+          {
+            prefix,
+            params,
+            router,
+            middlewares: middlewaresClone,
+          }
+        ] as RouterItem[];
       } else {
-        key = t;
+        curr['__route___'].push({
+          prefix,
+          params,
+          router,
+          middlewares: middlewaresClone,
+        } as RouterItem);
       }
-      if (!curr[key]) {
-        curr[key] = {};
-      }
-      curr = curr[key];
-    });
-    curr['__route___'] = {
-      prefix,
-      params,
-      router,
-      middlewares: middlewaresClone,
-    } as RouterItem;
+    }
   };
   routes.forEach(item => recur('', item, []));
   return routers;
 };
 
-const getRouter = (item: any): RouterItem | null => {
-  let route: RouterItem | null = null;
+const getRouter = (item: any): RouterItem[] => {
+  let route: RouterItem[] = [];
   if (item && item['__route___']) {
-    route = item['__route___'] as RouterItem;
+    route = item['__route___'] as RouterItem[];
   } else if (item && item[''] && item['']['__route___']) {
-    route = item['']['__route___'] as RouterItem;
+    route = item['']['__route___'] as RouterItem[];
+  } else if (item && item['***']) {
+    return getRouter(item['***']);
   }
   return route;
 };
@@ -105,24 +120,27 @@ export const getRouteInfo = (routers: any, pathinfo: string, method: string): Ro
       break;
     }
   }
-  const route: RouterItem | null = getRouter(curr);
-  if (route) {
-    const methods = route.router.method.toUpperCase().split('|');
-    if (methods.indexOf('ANY') > -1 || methods.indexOf(method) > -1) {
-      const routeInfo: RouterInfo = {
-        pathinfo,
-        params: {},
-        handlers: route.router.handlers ? route.router.handlers : [],
-        middlewares: route.middlewares,
-      };
-      if (route.params && route.params.length) {
-        route.params.forEach((item: string, index: number) => {
-          if (typeof params[index] !== 'undefined') {
-            routeInfo.params[item] = params[index];
-          }
-        });
+  const routes: RouterItem[] = getRouter(curr);
+  if (routes.length) {
+    for (let i = 0; i < routes.length; i++) {
+      const route = routes[i];
+      const methods = route.router.method.toUpperCase().split('|');
+      if (methods.indexOf('ANY') > -1 || methods.indexOf(method) > -1) {
+        const routeInfo: RouterInfo = {
+          pathinfo,
+          params: {},
+          handlers: route.router.handlers ? route.router.handlers : [],
+          middlewares: route.middlewares,
+        };
+        if (route.params && route.params.length) {
+          route.params.forEach((item: string, index: number) => {
+            if (typeof params[index] !== 'undefined') {
+              routeInfo.params[item] = params[index];
+            }
+          });
+        }
+        return routeInfo;
       }
-      return routeInfo;
     }
     return null;
   }

@@ -1,13 +1,20 @@
 import test from './test.controller';
 import * as middlewares from '../../middleware';
-import { Router } from '../../framework';
-import { failed, StatusCode } from '../../index';
+import { Router, KoaContext } from '../../framework';
+import { success, failed, StatusCode } from '../../index';
 
 const testRouter: Router = new Router();
 
 testRouter.new('/', {
-  method: 'any',
+  method: 'get',
   handlers: [test.index]
+});
+
+testRouter.new('/', {
+  method: 'post',
+  handlers: [async (context: KoaContext) => {
+    success('hello world for post request');
+  }]
 });
 
 testRouter.new('/', {
