@@ -45,7 +45,7 @@ export const resolveRouters = (routes: Router[]): any => {
       trace.forEach((t: string): void => {
         if (t.indexOf('{:') === 0) {
           key = '*';
-          params.push(t.substring(2, t.length - 3));
+          params.push(t.substring(2, t.length - 1));
         } else {
           key = t;
         }
