@@ -1,0 +1,19 @@
+{
+  "name": "ts-study-cicd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "module": "index",
+  "scripts": {
+    "lint": "eslint --fix ./**/*"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@axiosleo/cli-tool": "^1.4.3",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^10.0.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.12.5"
+  }
+}

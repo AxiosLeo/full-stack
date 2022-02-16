@@ -1,0 +1,48 @@
+version: '3'
+services:
+  mysql:
+    image: 'mysql'
+    # need export DEPLOY_PLATFORM="linux/x86_64" on M1 mac
+    container_name: "ts-study-mysql"
+    command: 
+      - "--default-authentication-plugin=mysql_native_password"
+    environment: 
+      MYSQL_ROOT_PASSWORD: '25jG7Gzs20wn3CjGDJMbIbpF5H4yPWqF'
+      MYSQL_USER: 'test'
+      MYSQL_PASS: 'test'
+    restart: 'always'
+    volumes: 
+      - "./deploy/data/mysql:/var/lib/mysql"
+    ports: 
+      - "3306:3306"
+  redis:
+    image: redis
+    container_name: "ts-study-redis"
+    restart: 'always'
+    volumes: 
+      - "./deploy/data/redis:/data"
+      - "./deploy/logs/redis:/logs"
+    ports:
+      - "6379:6379"
+  mongo:
+    image: "mongo"
+    container_name: "ts-study-mongo"
+    environment:
+      MONGO_INITDB_DATABASE: "ts-study"
+    volumes:
+      - "./deploy/data/mongo:/data/db"
+    ports:
+      - "27017:27017"
+  rabbit:
+    image: rabbitmq
+    hostname: rabbit
+    container_name: "ts-study-rabbitmq"
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=6bA4a(IE$f!7qf@
+    volumes:
+      - ./deploy/data/rabbitmq:/var/lib/rabbitmq
