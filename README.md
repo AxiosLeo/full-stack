@@ -1,8 +1,4 @@
-# Project for study Typescript 
+# Project for study Typescript
 
-## Start web server
-
-```bash
-npm install
-npm run dev
-```
+- [Backend Project](./backend/)
+- [Frontend Project](./frontend/)
