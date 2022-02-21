@@ -3,7 +3,7 @@ services:
   mysql:
     image: 'mysql'
     # need export DEPLOY_PLATFORM="linux/x86_64" on M1 mac
-    container_name: "ts-study-mysql"
+    container_name: "full-stack-mysql"
     command: 
       - "--default-authentication-plugin=mysql_native_password"
     environment: 
@@ -17,7 +17,7 @@ services:
       - "3306:3306"
   redis:
     image: redis
-    container_name: "ts-study-redis"
+    container_name: "full-stack-redis"
     restart: 'always'
     volumes: 
       - "./deploy/data/redis:/data"
@@ -26,9 +26,9 @@ services:
       - "6379:6379"
   mongo:
     image: "mongo"
-    container_name: "ts-study-mongo"
+    container_name: "full-stack-mongo"
     environment:
-      MONGO_INITDB_DATABASE: "ts-study"
+      MONGO_INITDB_DATABASE: "full-stack"
     volumes:
       - "./deploy/data/mongo:/data/db"
     ports:
@@ -36,7 +36,7 @@ services:
   rabbit:
     image: rabbitmq
     hostname: rabbit
-    container_name: "ts-study-rabbitmq"
+    container_name: "full-stack-rabbitmq"
     restart: always
     ports:
       - "5672:5672"

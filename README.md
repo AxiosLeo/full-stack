@@ -1,4 +1,4 @@
-# Project for study Typescript
+# Project for full-stack development
 
 - [Backend Project](./backend/)
 - [Web Project](./web/)

@@ -1,7 +1,7 @@
 {
-  "name": "ts-study-project",
+  "name": "full-stack-servuces",
   "version": "0.0.1",
-  "description": "Project for study Typescript",
+  "description": "OpenAPI & web backend services",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {

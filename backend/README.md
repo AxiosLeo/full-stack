@@ -1,5 +1,3 @@
-# Project for study Typescript 
-
 ## Start web server
 
 ```bash
