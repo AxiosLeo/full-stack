@@ -1,0 +1,25 @@
+gitlab:
+  image: 'gitlab/gitlab-ce:latest'
+  restart: always
+  hostname: 'localhost'
+  environment:
+    GITLAB_OMNIBUS_CONFIG: |
+      external_url 'http://localhost'
+      # Add any other gitlab.rb configuration here, each on its own line
+  ports:
+    - '8100:80'
+    - '7443:443'
+    - '722:22'
+  volumes:
+    - './config:/etc/gitlab'
+    - './logs:/var/log/gitlab'
+    - './data:/var/opt/gitlab'
+
+gitlab-runner:
+  image: gitlab/gitlab-runner
+  restart: unless-stopped
+  privileged: true
+  volumes:
+    - /root/git-repo/gitlab/runner:/etc/gitlab-runner
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /usr/bin/docker:/bin/docker
