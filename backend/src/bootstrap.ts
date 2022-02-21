@@ -1,5 +1,5 @@
 
-import cluster from 'cluster';
+import cluster, { Worker, Address } from 'cluster';
 import { cpus } from 'os';
 import { printer } from '@axiosleo/cli-tool';
 import { start } from './';
@@ -16,17 +16,17 @@ if (cluster.isMaster) {
   for (let i = 0; i < process_count; i++) {
     cluster.fork();
   }
-  cluster.on('listening', (worker, address) => {
+  cluster.on('listening', (worker: Worker, address: Address) => {
     printer.yellow('worker pid: ').print(`${worker.process.pid}`)
       .yellow(' listening on ').green(`${address.port}`).println();
   });
-  cluster.on('message', (worker) => {
+  cluster.on('message', (worker: Worker) => {
     printer.warning(`Worker ${worker.process.pid} get message`);
   });
-  cluster.on('disconnect', (worker) => {
+  cluster.on('disconnect', (worker: Worker) => {
     printer.warning(`Worker ${worker.process.pid} disconnect.`);
   });
-  cluster.on('exit', (worker, code, signal) => {
+  cluster.on('exit', (worker: Worker, code: number, signal: string) => {
     printer.warning(`Worker ${worker.process.pid} died with code: ${code} and signal: ${signal}`);
     printer.warning('Starting a new worker...');
     cluster.fork();
