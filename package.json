@@ -5,7 +5,8 @@
   "main": "index.js",
   "module": "index",
   "scripts": {
-    "lint": "eslint --fix ./**/*"
+    "lint": "eslint --fix ./**/*",
+    "start": "node ./scripts/start.js"
   },
   "author": "",
   "license": "MIT",
