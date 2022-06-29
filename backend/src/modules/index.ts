@@ -1,8 +1,7 @@
 import test from './test/test.routes';
-import { Router, routers } from '../framework';
+import { Router } from '../framework';
 
-const root = new Router();
-root.new('/test', test);
+const root = new Router('/v0');
+root.add(test);
 
-routers.push(root);
-routers.push(test);
+export default root;

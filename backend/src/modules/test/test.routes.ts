@@ -1,11 +1,11 @@
 import test from './test.controller';
 import * as middlewares from '../../middleware';
 import { Router, KoaContext } from '../../framework';
-import { success, failed, StatusCode } from '../../index';
+import { success, failed, StatusCode } from '../../response';
 
-const testRouter: Router = new Router();
+const testRouter: Router = new Router('/test');
 
-testRouter.new('/', {
+testRouter.new('', {
   method: 'get',
   handlers: [test.index]
 });

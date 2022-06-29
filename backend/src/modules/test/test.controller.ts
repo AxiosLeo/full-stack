@@ -3,7 +3,7 @@ import {
   Model
 } from '../../framework';
 import { Test } from '../../models';
-import { StatusCode, success, failed, response } from '../..';
+import { StatusCode, success, failed, response } from '../../response';
 
 const index = async (): Promise<void> => {
   success('hello world');

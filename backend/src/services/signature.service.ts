@@ -8,17 +8,20 @@ const signHeaders = [
   'content-type',
   'host',
   'user-agent',
-  'x-app-key',
+  'x-access-key-id',
   'x-signature-method',
   'x-signature-nonce',
   'x-timestamp'
 ];
 
-export const signatureMethods: Record<string, (str: string, secret: string) => Promise<CryptoJS.lib.WordArray>> = {
-  hmacsha256: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => {
+export const signatureMethods: Record<string, (str: string, secret: string) => CryptoJS.lib.WordArray> = {
+  hmacsha1: (str: string, secret: string): CryptoJS.lib.WordArray => {
+    return CryptoJS.HmacSHA1(str, secret);
+  },
+  hmacsha256: (str: string, secret: string): CryptoJS.lib.WordArray => {
     return CryptoJS.HmacSHA256(str, secret);
   },
-  hmacsha512: async (str: string, secret: string): Promise<CryptoJS.lib.WordArray> => {
+  hmacsha512: (str: string, secret: string): CryptoJS.lib.WordArray => {
     return CryptoJS.HmacSHA512(str, secret);
   }
 };
@@ -46,6 +49,6 @@ export const generateSignatureStr = async (
 
 export const makeSignature = async (signStr: string, secretKey: string, signatureMethod: string): Promise<string> => {
   const handler = signatureMethods[signatureMethod];
-  const signature = await handler(signStr, secretKey);
+  const signature = handler(signStr, secretKey);
   return signature.toString();
 };
