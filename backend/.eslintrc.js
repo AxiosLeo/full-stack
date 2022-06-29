@@ -1,110 +1,118 @@
-'use strict';
-
 module.exports = {
-  "env": {
-    "browser": true,
-    "es6": true,
-    "node": true
+  'env': {
+    'browser': true,
+    'es6': true,
+    'node': true
   },
-  "extends": [
-    "plugin:@typescript-eslint/recommended"
+  'extends': [
+    'plugin:@typescript-eslint/recommended'
   ],
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "tsconfig.json",
-    "sourceType": "module",
-    "tsconfigRootDir": __dirname
+  'parser': '@typescript-eslint/parser',
+  'parserOptions': {
+    'project': 'tsconfig.json',
+    'sourceType': 'module',
+    'tsconfigRootDir': __dirname
   },
-  "plugins": [
-    "@typescript-eslint"
+  'plugins': [
+    '@typescript-eslint'
   ],
-  "ignorePatterns": [],
-  "rules": {
-    "@typescript-eslint/no-explicit-any": 0,
-    "indent": [
+  'ignorePatterns': [],
+  'rules': {
+    '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/no-non-null-assertion': 0,
+    'indent': [
       2,
       2
     ],
-    "quotes": [
+    'quotes': [
       2,
-      "single"
+      'single'
     ],
-    "linebreak-style": [
+    'linebreak-style': [
       2,
-      "unix"
+      'unix'
     ],
-    "semi": [
+    'semi': [
       2,
-      "always"
+      'always'
     ],
-    "strict": [
+    'strict': [
       2,
-      "global"
+      'global'
     ],
-    "curly": 2,
-    "eqeqeq": 2,
-    "no-eval": 2,
-    "guard-for-in": 2,
-    "no-caller": 2,
-    "no-else-return": 2,
-    "no-eq-null": 2,
-    "no-extend-native": 2,
-    "no-extra-bind": 2,
-    "no-floating-decimal": 2,
-    "no-implied-eval": 2,
-    "no-labels": 2,
-    "no-with": 2,
-    "no-loop-func": 1,
-    "no-native-reassign": 2,
-    "no-redeclare": [
+    'curly': 2,
+    'eqeqeq': 2,
+    'no-eval': 2,
+    'guard-for-in': 2,
+    'no-caller': 2,
+    'no-else-return': 2,
+    'no-eq-null': 2,
+    'no-extend-native': 2,
+    'no-extra-bind': 2,
+    'no-floating-decimal': 2,
+    'no-implied-eval': 2,
+    'no-labels': 2,
+    'no-with': 2,
+    'no-loop-func': 1,
+    'no-native-reassign': 2,
+    'no-redeclare': [
       2,
       {
-        "builtinGlobals": true
+        'builtinGlobals': true
       }
     ],
-    "no-delete-var": 2,
-    "no-shadow-restricted-names": 2,
-    "no-undef-init": 2,
-    "no-use-before-define": 2,
-    "no-unused-vars": [
+    'no-delete-var': 2,
+    'no-shadow-restricted-names': 2,
+    'no-undef-init': 2,
+    'no-use-before-define': 2,
+    'no-unused-vars': [
       2,
       {
-        "args": "none"
+        'args': 'none'
       }
     ],
-    "no-undefined": 1,
-    "no-undef": 2,
-    "global-require": 0,
-    "no-console": 0,
-    "key-spacing": [
+    'no-undefined': 0,
+    'no-undef': 2,
+    'global-require': 0,
+    'no-console': 2,
+    'key-spacing': [
       2,
       {
-        "beforeColon": false,
-        "afterColon": true
+        'beforeColon': false,
+        'afterColon': true
       }
     ],
-    "eol-last": [
+    'eol-last': [
       2,
-      "always"
+      'always'
+    ],
+    'space-in-parens': [
+      2,
+      'never'
+    ],
+    'no-multi-spaces': [
+      2,
+      {
+        'ignoreEOLComments': true
+      }
     ]
   },
-  "overrides": [
+  'overrides': [
     {
-      "files": [
-        "**/*/*.test.ts"
+      'files': [
+        '**/*/*.test.ts'
       ],
-      "rules": {
-        "max-lines-per-function": "off"
+      'rules': {
+        'max-lines-per-function': 'off'
       },
-      tsconfigRootDir: __dirname,
     }
   ],
-  "globals": {
-    "describe": true,
-    "it": true,
-    "before": true,
-    "after": true,
-    "beforeEach": true,
-    "afterEach": true
+  'globals': {
+    'describe': true,
+    'it': true,
+    'before': true,
+    'after': true,
+    'beforeEach': true,
+    'afterEach': true
   }
-}
+};
