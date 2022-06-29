@@ -19,7 +19,7 @@ const middleware = async (context: KoaContext): Promise<void> => {
   await listen(AppLifecycle.MIDDLEWARE, context);
 
   // exec middleware by routes configuration
-  if(context.router && context.router.middlewares && context.router.middlewares.length > 0) {
+  if (context.router && context.router.middlewares && context.router.middlewares.length > 0) {
     await helper.cmd._sync_foreach(context.router.middlewares, async (middleware) => {
       await middleware(context);
     });
@@ -38,7 +38,7 @@ const validate = async (context: KoaContext): Promise<void> => {
  * exec controller for sigle API
  * @param context
  */
-const controller = async (context: KoaContext): Promise<void> => {
+const handle = async (context: KoaContext): Promise<void> => {
   await listen(AppLifecycle.CONTROLLER, context);
   const handlers = context.router?.handlers;
   if (handlers && handlers.length) {
@@ -54,5 +54,5 @@ export {
   begin,
   middleware,
   validate,
-  controller,
+  handle,
 };

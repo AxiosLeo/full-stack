@@ -2,27 +2,23 @@ export * from './routes';
 export * as events from './events';
 export * from './types';
 export * from './model';
+export * from './controller';
 
+import { v4 as uuidv4, v5 as uuidv5, validate } from 'uuid';
 import Koa from 'koa';
-import KoaBodyParser from 'koa-bodyparser';
-import {
-  v4 as uuidv4,
-  v5 as uuidv5,
-  validate,
-} from 'uuid';
-import { Workflow, Configuration } from '@axiosleo/cli-tool';
-import * as operator from './app';
-import { KoaContext, AppLifecycle, AppConfiguration } from './types';
+import { Configuration } from '@axiosleo/cli-tool';
+import { AppConfiguration, AppLifecycle, KoaContext } from './types';
+import { listen } from '../framework/events';
 import { resolveRouters, getRouteInfo } from './internal';
-import { listen } from './events';
-import { Router } from './routes';
+import { Workflow } from '@axiosleo/cli-tool';
+import * as operator from './app';
 
 export class HttpResponse extends Error {
   status: number;
-  data: Record<string, unknown> = {};
+  data: any = {};
   headers: Record<string, string>;
   format = 'json';
-  constructor(httpStatus: number, data: Record<string, unknown>, headers: Record<string, string> = {}) {
+  constructor(httpStatus: number, data: any, headers: Record<string, string> = {}) {
     super();
     this.headers = headers;
     this.status = httpStatus;
@@ -42,59 +38,57 @@ export class HttpError extends Error {
   }
 }
 
-export class Application extends Configuration {
-  app_id: string;
-  events: unknown[] = [];
-  routes: Router[] = [];
+export abstract class Application extends Configuration implements AppConfiguration {
   constructor(config: AppConfiguration) {
     super(config);
-    this.app_id = config.app_id ? config.app_id : '';
+    this.app_id = config.app_id || '';
     if (!this.app_id) {
       this.app_id = uuidv4();
     }
+    this.routes = resolveRouters(this.routers);
+    this.workflow = new Workflow<KoaContext>(operator);
+    listen(AppLifecycle.START, this);
   }
 
-  async start(routers?: Router[], options?: Record<string, any>): Promise<void> {
-    const routes = resolveRouters(routers ? routers : []);
-    const koa = new Koa(options);
-    await listen(AppLifecycle.START, this);
-    const workflow = new Workflow<KoaContext>(operator);
-    koa.use(KoaBodyParser());
-    koa.use(async (ctx: Koa.ParameterizedContext, next) => {
-      const context: KoaContext = {
-        app: this,
-        koa: ctx,
-        app_id: this.app_id,
-        curr: {},
-        step_data: {},
-        method: ctx.req.method ? ctx.req.method : '',
-        url: ctx.req.url ? ctx.req.url : '/',
-        request_id: `${uuidv5(uuidv4(), !validate(this.app_id) ? uuidv4() : this.app_id)}`
-      };
-      const router: Router | null = await next();
-      if (!router) {
-        await listen(AppLifecycle.NOT_FOUND, context);
-      }
-      context.router = router;
-      try {
-        await workflow.start(context);
-      } catch (exContext: any) {
-        if (exContext.curr.error instanceof HttpResponse) {
-          await listen(AppLifecycle.RESPONSE, context);
-        } else {
-          await listen(AppLifecycle.ERROR, context);
-        }
-      }
-      await listen(AppLifecycle.DONE, context);
-    });
-    koa.use(async (ctx: Koa.ParameterizedContext) => {
-      // find router
-      const router = getRouteInfo(routes, ctx.path, ctx.method);
-      if (router) {
-        return router;
-      }
-      return null;
-    });
-    koa.listen(this.port);
-  }
+  abstract start(): Promise<void>;
 }
+
+const initContext = (app: Application, ctx: Koa.ParameterizedContext, app_id: string): KoaContext => {
+  const context: KoaContext = {
+    app,
+    koa: ctx,
+    app_id: app_id,
+    curr: {},
+    step_data: {},
+    method: ctx.req.method ? ctx.req.method : '',
+    url: ctx.req.url ? ctx.req.url : '/',
+    request_id: `${uuidv5(uuidv4(), !validate(app_id) ? uuidv4() : app_id)}`
+  };
+  return context;
+};
+
+export const HttpRequestDispatcher = (app: Application, workflow: Workflow<KoaContext>, routes: any, app_id: string) => {
+  return async (ctx: Koa.ParameterizedContext, next: any) => {
+    const context = initContext(app, ctx, app_id);
+    const router = getRouteInfo(routes, ctx.path, ctx.method);
+    if (!router) {
+      await listen(AppLifecycle.NOT_FOUND, context);
+    }
+    context.params = router?.params;
+    context.body = ctx.request.body;
+    context.query = ctx.request.query ? JSON.parse(JSON.stringify(ctx.request.query)) : {};
+    context.headers = ctx.request.headers;
+    context.router = router;
+    try {
+      await workflow.start(context);
+    } catch (exContext: any) {
+      if (exContext.curr.error instanceof HttpResponse) {
+        await listen(AppLifecycle.RESPONSE, context);
+      } else {
+        await listen(AppLifecycle.ERROR, context);
+      }
+    }
+    await listen(AppLifecycle.DONE, context);
+    await next();
+  };
+};

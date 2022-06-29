@@ -6,6 +6,7 @@ import {
 export class Router {
   prefix: string;
   method = '';
+  // eslint-disable-next-line no-use-before-define
   routers: Router[] = [];
   handlers?: ContextHandler[];
   middlewares?: ContextHandler[];
@@ -31,4 +32,3 @@ export class Router {
   }
 }
 
-export const routers: Router[] = [];

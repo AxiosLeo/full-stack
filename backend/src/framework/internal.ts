@@ -120,6 +120,7 @@ export const getRouteInfo = (routers: any, pathinfo: string, method: string): Ro
       break;
     }
   }
+  // console.log(JSON.stringify(routers, null, 2));
   const routes: RouterItem[] = getRouter(curr);
   if (routes.length) {
     for (let i = 0; i < routes.length; i++) {

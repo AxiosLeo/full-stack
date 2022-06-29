@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import Koa from 'koa';
+import KoaStaticServer from 'koa-static-server';
 
 import { Context } from '@axiosleo/cli-tool';
 import { Router } from './routes';
@@ -62,7 +63,17 @@ export interface AppConfiguration {
   [key: string]: any;
   debug?: boolean,
   count?: number,
-  port: number,
+  port?: number,
   app_id?: string,
-  paths?: Record<string, string>
+  paths?: Record<string, string>,
+  routers?: Router[],
+  server?: {
+    env?: string | undefined,
+    keys?: string[] | undefined,
+    proxy?: boolean | undefined,
+    subdomainOffset?: number | undefined,
+    proxyIpHeader?: string | undefined,
+    maxIpsCount?: number | undefined,
+    static?: KoaStaticServer.Options
+  }
 }
