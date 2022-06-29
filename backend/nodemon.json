@@ -7,7 +7,7 @@
     "src"
   ],
   "exec": [
-    "node -r @swc-node/register src/bootstrap.ts"
+    "node -r @swc-node/register src/"
   ],
   "ext": "ts"
 }
